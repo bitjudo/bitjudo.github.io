@@ -2,10 +2,10 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://yoursite.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+url: http://bitjudo.com
+title: bitJudo
+subtitle: I Know Kung Fu
+author: Erik Kristensen and David Weinstein
 simple_search: https://www.google.com/search
 description:
 
@@ -94,7 +94,8 @@ disqus_short_name:
 disqus_show_comment_count: false
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-48897339-1
+google_analytics_tracking_domain: bitjudo.com
 
 # Facebook Like
 facebook_like: false
