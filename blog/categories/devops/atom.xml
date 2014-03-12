@@ -4,7 +4,7 @@
   <title><![CDATA[Category: devops | bitJudo]]></title>
   <link href="http://bitjudo.github.io/blog/categories/devops/atom.xml" rel="self"/>
   <link href="http://bitjudo.github.io/"/>
-  <updated>2014-03-12T08:39:09-04:00</updated>
+  <updated>2014-03-12T08:40:40-04:00</updated>
   <id>http://bitjudo.github.io/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -61,7 +61,7 @@
 </span><span class='line'>&lt;p&gt;<span class="o">[</span> -n &amp;ldquo;<span class="nv">$1</span>&amp;rdquo; <span class="o">]</span> &amp;amp;&amp;amp; docker inspect <span class="nv">$1</span> | jq -r &amp;ldquo;.<span class="o">[</span>0<span class="o">]</span> | .NetworkSettings | .Ports | .<span class="o">[</span><span class="se">\&amp;</span>rdquo;<span class="nv">$2</span><span class="se">\&amp;</span>ldquo;<span class="o">]</span> | .<span class="o">[</span>0<span class="o">]</span> | .HostPort&amp;rdquo;
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>The great news is that with <code>jq</code>, you can create simple one liners for just about anything with the <code>docker inspect</code> command. Just alter the <code>jq</code> syntax.</p>
+<p>The great news is that with <code>jq</code>, you can create simple one liners for just about anything with the <code>docker inspect</code> command and drop them in <code>/usr/loca/bin</code> and make your administrative life a little easier. I&rsquo;m sure there are more useful ones, but those are the top 3 that David and I use that make things more simple.</p>
 ]]></content>
   </entry>
   
