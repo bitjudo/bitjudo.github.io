@@ -26,5 +26,5 @@ I took it one step further and created several more one liners to get other vari
 [ -n "$1" ] && docker inspect $1 | jq -r ".[0] | .NetworkSettings | .Ports | .[\"$2\"] | .[0] | .HostPort"
 {% endcodeblock %}
 
-The great news is that with `jq`, you can create simple one liners for just about anything with the `docker inspect` command. Just alter the `jq` syntax. 
+The great news is that with `jq`, you can create simple one liners for just about anything with the `docker inspect` command and drop them in `/usr/loca/bin` and make your administrative life a little easier. I'm sure there are more useful ones, but those are the top 3 that David and I use that make things more simple.
 
