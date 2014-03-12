@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[bitJudo]]></title>
+  <link href="http://bitjudo.com/atom.xml" rel="self"/>
+  <link href="http://bitjudo.com/"/>
+  <updated>2014-03-11T19:53:39-04:00</updated>
+  <id>http://bitjudo.com/</id>
+  <author>
+    <name><![CDATA[Erik Kristensen and David Weinstein]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[testing post]]></title>
+    <link href="http://bitjudo.com/blog/2014/03/11/testing-post/"/>
+    <updated>2014-03-11T19:37:06-04:00</updated>
+    <id>http://bitjudo.com/blog/2014/03/11/testing-post</id>
+    <content type="html"><![CDATA[<p>Just a test of awesome.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">blah</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+</feed>
