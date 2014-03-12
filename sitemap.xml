@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://bitjudo.com/blog/2014/03/11/testing-post/</loc>
+        <loc>http://bitjudo.github.io/blog/2014/03/11/testing-post/</loc>
         <lastmod>2014-03-11T19:45:35-04:00</lastmod>
     </url>
     <url>
-        <loc>http://bitjudo.com/blog/archives/</loc>
+        <loc>http://bitjudo.github.io/blog/archives/</loc>
         <lastmod>2014-03-11T19:45:35-04:00</lastmod>
     </url>
     <url>
-        <loc>http://bitjudo.com/</loc>
+        <loc>http://bitjudo.github.io/</loc>
         <lastmod>2014-03-11T19:45:35-04:00</lastmod>
     </url>
     <url>
-        <loc>http://bitjudo.com/robots.txt</loc>
+        <loc>http://bitjudo.github.io/robots.txt</loc>
         <lastmod>2014-03-11T19:36:29-04:00</lastmod>
     </url>
 </urlset>

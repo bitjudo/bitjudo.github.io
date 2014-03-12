@@ -2,12 +2,12 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: one | bitJudo]]></title>
-  <link href="http://bitjudo.com/blog/categories/one/atom.xml" rel="self"/>
-  <link href="http://bitjudo.com/"/>
-  <updated>2014-03-11T19:53:39-04:00</updated>
-  <id>http://bitjudo.com/</id>
+  <link href="http://bitjudo.github.io/blog/categories/one/atom.xml" rel="self"/>
+  <link href="http://bitjudo.github.io/"/>
+  <updated>2014-03-11T20:19:32-04:00</updated>
+  <id>http://bitjudo.github.io/</id>
   <author>
-    <name><![CDATA[Erik Kristensen and David Weinstein]]></name>
+    <name><![CDATA[a couple of geeks]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[testing post]]></title>
-    <link href="http://bitjudo.com/blog/2014/03/11/testing-post/"/>
+    <link href="http://bitjudo.github.io/blog/2014/03/11/testing-post/"/>
     <updated>2014-03-11T19:37:06-04:00</updated>
-    <id>http://bitjudo.com/blog/2014/03/11/testing-post</id>
+    <id>http://bitjudo.github.io/blog/2014/03/11/testing-post</id>
     <content type="html"><![CDATA[<p>Just a test of awesome.</p>
 
 <p>```javascript
