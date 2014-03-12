@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>bitJudo</title>
+	<title>Docker Scripts - bitJudo</title>
 	<meta name="author" content="a couple of geeks">
 
 	
@@ -75,18 +75,9 @@
 	
 		
 	
-	<div id="content" class="inner">
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/03/11/docker-scripts/">
-		
-			Docker Scripts</a>
-	</h2>
-	<div class="entry-content">
-		<p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Docker Scripts</h2>
+	<div class="entry-content"><p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
 
 <figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -117,10 +108,7 @@
 
 
 <p>The great news is that with <code>jq</code>, you can create simple one liners for just about anything with the <code>docker inspect</code> command. Just alter the <code>jq</code> syntax.</p>
-
-		
-		
-	</div>
+</div>
 
 
 <div class="meta">
@@ -152,11 +140,26 @@
 </div>
 </article>
 
-<nav id="pagenavi">
-    
-    
-    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
-</nav></div>
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
 	<footer id="footer" class="inner">Copyright &copy; 2014
 
     a couple of geeks
@@ -175,7 +178,10 @@
       var disqus_shortname = 'bitjudo';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://bitjudo.github.io/blog/2014/03/11/docker-scripts/';
+        var disqus_url = 'http://bitjudo.github.io/blog/2014/03/11/docker-scripts/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

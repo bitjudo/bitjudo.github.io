@@ -4,7 +4,7 @@
   <title><![CDATA[bitJudo]]></title>
   <link href="http://bitjudo.github.io/atom.xml" rel="self"/>
   <link href="http://bitjudo.github.io/"/>
-  <updated>2014-03-11T20:34:02-04:00</updated>
+  <updated>2014-03-12T08:39:09-04:00</updated>
   <id>http://bitjudo.github.io/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -14,20 +14,41 @@
 
   
   <entry>
-    <title type="html"><![CDATA[testing post]]></title>
-    <link href="http://bitjudo.github.io/blog/2014/03/11/testing-post/"/>
+    <title type="html"><![CDATA[Docker Scripts]]></title>
+    <link href="http://bitjudo.github.io/blog/2014/03/11/docker-scripts/"/>
     <updated>2014-03-11T19:37:06-04:00</updated>
-    <id>http://bitjudo.github.io/blog/2014/03/11/testing-post</id>
-    <content type="html"><![CDATA[<p>Just a test of awesome.</p>
+    <id>http://bitjudo.github.io/blog/2014/03/11/docker-scripts</id>
+    <content type="html"><![CDATA[<p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">blah</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">}</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-ip (name or sha)</span>
+</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect <span class="nv">$1</span> | jq -r <span class="s1">&#39;.[0] | .NetworkSettings | .IPAddress&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>I took it one step further and created several more one liners to get other various pieces of information from containers.</p>
+
+<figure class='code'><figcaption><span>docker-get-id </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-id (friendly-name)</span>
+</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect <span class="nv">$1</span> | jq -r <span class="s1">&#39;.[0] | .ID&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>docker-get-port </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-port (name|sha) port/protocol</span>
+</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect <span class="nv">$1</span> | jq -r <span class="s2">&quot;.[0] | .NetworkSettings | .Ports | .[\&quot;$2\&quot;] | .[0] | .HostPort&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The great news is that with <code>jq</code>, you can create simple one liners for just about anything with the <code>docker inspect</code> command. Just alter the <code>jq</code> syntax.</p>
 ]]></content>
   </entry>
   
