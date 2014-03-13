@@ -159,20 +159,9 @@ change and test workflows.</p>
 
 <p>Docker released an open-source registry that allows you to remote store images you create with docker, but what the did not release is an open-source index. The index is arguably (depending on your use case) the most important part, it handles the authentication layer of a registry. A registry can be used without and index, and if you are just wanting a place to store your images and you don&rsquo;t want to worry about who can access them, then no need to read on.</p>
 
-<p>For my job I needed a way to host images securely, but still allow various people inside and outside my organization to access certain images, so in my spare time (and since no one had done it yet that I could find) I started writing an index using Node.JS. It is currently in its infancy, but it works as of right now.</p>
-
-<p>The project lives on github at <a href="https://github.com/ekristen/docker-index">docker-index</a> and it is setup as a trusted build and deployed to the public docker registry/index at <a href="https://index.docker.io/u/ekristen/docker-index/.">https://index.docker.io/u/ekristen/docker-index/.</a> Just run <code>docker pull ekristen/docker-index</code> to get started. Specific instructions on how to get the registry, index, and redis working together can be found on the project&rsquo;s <a href="https://github.com/ekristen/docker-index/blob/master/README.md#how-to-use">README</a></p>
-
-<p>It has only one dependency at this time and that is redis, that will most likely change to use mongodb or maybe even mysql to store users, permissions, and other index data, but redis was a quick and simple medium when doing the intial prototyping.</p>
-
-<p>My future plans for the index are to create an admin interface that facilitates the management of users, namespaces, repositories and their associate permissions. For now all that has to be done by editing the configuration file.</p>
-
-<p>This was a big help for me, hopefully having this code out there can help others too.</p>
-
-<p>If you are interested in helping out pull requests are always welcome. If you have feedback, let me know.</p>
 
 		
-		
+		<a href="/blog/2014/03/12/authentication-for-a-docker-registry/" class="more-link">Read on &rarr;</a>
 	</div>
 
 
@@ -216,38 +205,9 @@ change and test workflows.</p>
 	<div class="entry-content">
 		<p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
 
-<figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-ip (name or sha)</span>
-</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect <span class="nv">$1</span> | jq -r <span class="s1">&#39;.[0] | .NetworkSettings | .IPAddress&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I took it one step further and created several more one liners to get other various pieces of information from containers.</p>
-
-<figure class='code'><figcaption><span>docker-get-id </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-id (friendly-name)</span>
-</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect <span class="nv">$1</span> | jq -r <span class="s1">&#39;.[0] | .ID&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>docker-get-port </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-port (name|sha) port/protocol</span>
-</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect <span class="nv">$1</span> | jq -r <span class="s2">&quot;.[0] | .NetworkSettings | .Ports | .[\&quot;$2\&quot;] | .[0] | .HostPort&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The great news is that with <code>jq</code>, you can create simple one liners for just about anything with the <code>docker inspect</code> command and drop them in <code>/usr/local/bin</code> and make your administrative life a little easier. I&rsquo;m sure there are more useful ones, but those are the top 3 that David and I use that make things more simple.</p>
 
 		
-		
+		<a href="/blog/2014/03/11/docker-scripts/" class="more-link">Read on &rarr;</a>
 	</div>
 
 

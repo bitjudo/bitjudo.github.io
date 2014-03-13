@@ -4,7 +4,7 @@
   <title><![CDATA[Category: scripts | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/scripts/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-13T11:44:21-04:00</updated>
+  <updated>2014-03-13T11:53:01-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -19,6 +19,9 @@
     <updated>2014-03-11T19:37:06-04:00</updated>
     <id>http://bitjudo.com/blog/2014/03/11/docker-scripts</id>
     <content type="html"><![CDATA[<p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
+
+<!-- more -->
+
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>

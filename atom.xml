@@ -4,7 +4,7 @@
   <title><![CDATA[bitJudo]]></title>
   <link href="http://bitjudo.com/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-13T11:44:21-04:00</updated>
+  <updated>2014-03-13T11:53:01-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -176,6 +176,9 @@ rebuilding them every time we change our apps source code!</p>
 
 <p>Docker released an open-source registry that allows you to remote store images you create with docker, but what the did not release is an open-source index. The index is arguably (depending on your use case) the most important part, it handles the authentication layer of a registry. A registry can be used without and index, and if you are just wanting a place to store your images and you don&rsquo;t want to worry about who can access them, then no need to read on.</p>
 
+<!-- more -->
+
+
 <p>For my job I needed a way to host images securely, but still allow various people inside and outside my organization to access certain images, so in my spare time (and since no one had done it yet that I could find) I started writing an index using Node.JS. It is currently in its infancy, but it works as of right now.</p>
 
 <p>The project lives on github at <a href="https://github.com/ekristen/docker-index">docker-index</a> and it is setup as a trusted build and deployed to the public docker registry/index at <a href="https://index.docker.io/u/ekristen/docker-index/.">https://index.docker.io/u/ekristen/docker-index/.</a> Just run <code>docker pull ekristen/docker-index</code> to get started. Specific instructions on how to get the registry, index, and redis working together can be found on the project&rsquo;s <a href="https://github.com/ekristen/docker-index/blob/master/README.md#how-to-use">README</a></p>
@@ -196,6 +199,11 @@ rebuilding them every time we change our apps source code!</p>
     <updated>2014-03-11T19:37:06-04:00</updated>
     <id>http://bitjudo.com/blog/2014/03/11/docker-scripts</id>
     <content type="html"><![CDATA[<p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
+
+<!-- more -->
+
+
+
 
 <figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>

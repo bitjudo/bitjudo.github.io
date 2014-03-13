@@ -2,11 +2,11 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://bitjudo.com/blog/2014/03/11/docker-scripts/</loc>
-        <lastmod>2014-03-12T17:48:22-04:00</lastmod>
+        <lastmod>2014-03-13T11:51:39-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/blog/2014/03/12/authentication-for-a-docker-registry/</loc>
-        <lastmod>2014-03-13T11:19:56-04:00</lastmod>
+        <lastmod>2014-03-13T11:50:51-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/</loc>
@@ -14,11 +14,11 @@
     </url>
     <url>
         <loc>http://bitjudo.com/blog/archives/</loc>
-        <lastmod>2014-03-13T11:43:50-04:00</lastmod>
+        <lastmod>2014-03-13T11:51:39-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/</loc>
-        <lastmod>2014-03-13T11:43:50-04:00</lastmod>
+        <lastmod>2014-03-13T11:51:39-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/robots.txt</loc>
