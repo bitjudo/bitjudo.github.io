@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: nodejs, | bitJudo]]></title>
+  <title><![CDATA[Category: nodejs | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/nodejs/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-13T12:19:29-04:00</updated>
+  <updated>2014-03-13T13:12:38-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -112,7 +112,7 @@ container.</p>
 
 <p>```
 FROM ubuntu
-MAINTAINER David Weinstein <a href="&#x6d;&#97;&#105;&#108;&#116;&#111;&#x3a;&#x64;&#97;&#x76;&#105;&#100;&#64;&#98;&#x69;&#116;&#106;&#117;&#100;&#x6f;&#46;&#x63;&#111;&#109;">&#x64;&#x61;&#118;&#105;&#x64;&#64;&#x62;&#105;&#116;&#x6a;&#117;&#100;&#x6f;&#x2e;&#99;&#x6f;&#109;</a></p>
+MAINTAINER David Weinstein <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#x64;&#x61;&#x76;&#x69;&#100;&#x40;&#98;&#x69;&#x74;&#106;&#x75;&#x64;&#x6f;&#x2e;&#99;&#x6f;&#x6d;">&#100;&#97;&#118;&#x69;&#x64;&#64;&#98;&#x69;&#116;&#106;&#117;&#100;&#111;&#x2e;&#x63;&#111;&#109;</a></p>
 
 <h1>install our dependencies and nodejs</h1>
 
