@@ -9,6 +9,8 @@ author: Erik Kristensen
 
 David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like [maestro](https://github.com/toscanini/maestro) and [maetro-ng](https://github.com/signalfuse/maestro-ng). David found an awesome command line for parsing json called [jq](http://stedolan.github.io/jq/) and put it to use by creating a bash one liner to grab a container's IP address.
 
+<!-- more -->
+
 {% codeblock lang:bash docker-get-ip %}
 # Usage: docker-get-ip (name or sha)
 [ -n "$1" ] && docker inspect $1 | jq -r '.[0] | .NetworkSettings | .IPAddress' 

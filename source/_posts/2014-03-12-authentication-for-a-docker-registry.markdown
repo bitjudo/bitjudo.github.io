@@ -11,6 +11,8 @@ Docker is an amazing tool that has only been around for a short while, but has t
 
 Docker released an open-source registry that allows you to remote store images you create with docker, but what the did not release is an open-source index. The index is arguably (depending on your use case) the most important part, it handles the authentication layer of a registry. A registry can be used without and index, and if you are just wanting a place to store your images and you don't want to worry about who can access them, then no need to read on.
 
+<!-- more -->
+
 For my job I needed a way to host images securely, but still allow various people inside and outside my organization to access certain images, so in my spare time (and since no one had done it yet that I could find) I started writing an index using Node.JS. It is currently in its infancy, but it works as of right now.
 
 The project lives on github at [docker-index](https://github.com/ekristen/docker-index) and it is setup as a trusted build and deployed to the public docker registry/index at https://index.docker.io/u/ekristen/docker-index/. Just run `docker pull ekristen/docker-index` to get started. Specific instructions on how to get the registry, index, and redis working together can be found on the project's [README](https://github.com/ekristen/docker-index/blob/master/README.md#how-to-use)
