@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: scripts | bitJudo]]></title>
-  <link href="http://bitjudo.github.io/blog/categories/scripts/atom.xml" rel="self"/>
-  <link href="http://bitjudo.github.io/"/>
-  <updated>2014-03-12T21:54:40-04:00</updated>
-  <id>http://bitjudo.github.io/</id>
+  <link href="http://bitjudo.com/blog/categories/scripts/atom.xml" rel="self"/>
+  <link href="http://bitjudo.com/"/>
+  <updated>2014-03-13T11:39:34-04:00</updated>
+  <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Docker Scripts]]></title>
-    <link href="http://bitjudo.github.io/blog/2014/03/11/docker-scripts/"/>
+    <link href="http://bitjudo.com/blog/2014/03/11/docker-scripts/"/>
     <updated>2014-03-11T19:37:06-04:00</updated>
-    <id>http://bitjudo.github.io/blog/2014/03/11/docker-scripts</id>
+    <id>http://bitjudo.com/blog/2014/03/11/docker-scripts</id>
     <content type="html"><![CDATA[<p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-get-ip </span></figcaption>

@@ -1,23 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://bitjudo.github.io/blog/2014/03/11/docker-scripts/</loc>
-        <lastmod>2014-03-12T08:43:37-04:00</lastmod>
+        <loc>http://bitjudo.com/blog/2014/03/11/docker-scripts/</loc>
+        <lastmod>2014-03-12T17:48:22-04:00</lastmod>
     </url>
     <url>
-        <loc>http://bitjudo.github.io/blog/2014/03/12/authentication-for-a-docker-registry/</loc>
-        <lastmod>2014-03-12T21:53:25-04:00</lastmod>
+        <loc>http://bitjudo.com/blog/2014/03/12/authentication-for-a-docker-registry/</loc>
+        <lastmod>2014-03-13T11:19:56-04:00</lastmod>
     </url>
     <url>
-        <loc>http://bitjudo.github.io/blog/archives/</loc>
-        <lastmod>2014-03-12T21:53:25-04:00</lastmod>
+        <loc>http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/</loc>
+        <lastmod>2014-03-13T11:31:43-04:00</lastmod>
     </url>
     <url>
-        <loc>http://bitjudo.github.io/</loc>
-        <lastmod>2014-03-12T21:53:25-04:00</lastmod>
+        <loc>http://bitjudo.com/blog/archives/</loc>
+        <lastmod>2014-03-13T11:31:43-04:00</lastmod>
     </url>
     <url>
-        <loc>http://bitjudo.github.io/robots.txt</loc>
-        <lastmod>2014-03-11T19:36:29-04:00</lastmod>
+        <loc>http://bitjudo.com/</loc>
+        <lastmod>2014-03-13T11:31:43-04:00</lastmod>
+    </url>
+    <url>
+        <loc>http://bitjudo.com/robots.txt</loc>
+        <lastmod>2014-03-12T17:48:22-04:00</lastmod>
     </url>
 </urlset>

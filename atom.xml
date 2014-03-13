@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[bitJudo]]></title>
-  <link href="http://bitjudo.github.io/atom.xml" rel="self"/>
-  <link href="http://bitjudo.github.io/"/>
-  <updated>2014-03-12T21:54:40-04:00</updated>
-  <id>http://bitjudo.github.io/</id>
+  <link href="http://bitjudo.com/atom.xml" rel="self"/>
+  <link href="http://bitjudo.com/"/>
+  <updated>2014-03-13T11:39:34-04:00</updated>
+  <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
     
@@ -14,10 +14,161 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Building Efficient Dockerfiles - Node.js]]></title>
+    <link href="http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/"/>
+    <updated>2014-03-13T09:34:02-04:00</updated>
+    <id>http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js</id>
+    <content type="html"><![CDATA[<h1>TL;DR</h1>
+
+<p>Use the following code snippet (or a variation) after all your app dependencies
+but before you ADD your app code to the container&hellip; this way you don&rsquo;t rebuild
+your modules each time you re-build your container. If your <code>package.json</code> file
+changes then your modules will be rebuilt.</p>
+
+<figure class='code'><figcaption><span>Add this to your Dockerfile</span><a href='https://gist.github.com/dweinstein/9468644'>gist </a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>ADD package.json /tmp/package.json
+</span><span class='line'>RUN cd /tmp &amp;&amp; npm install
+</span><span class='line'>RUN mkdir -p /opt/app &amp;&amp; cp -a /tmp/node_modules /opt/app/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Using cached layers for modules</h1>
+
+<p>This article is about making efficient use of docker layers, and as a side
+effect how to reduce development and debugging time for Node.js applications
+hosted in Docker containers. As you migrate from developing everything on your
+host system into Docker, there are some growing pains, mainly arround rapid
+change and test workflows.</p>
+
+<p>There was a time when each time I&rsquo;d make a slight modification to my
+application, I&rsquo;d spend time waiting for my docker container to reubild, usually
+waiting for the modules to be reinstalled.  I&rsquo;d spend more time waiting for the
+dependencies to rebuild than actually fixing the problem.  I hope this article
+helps others get out of that ditch&hellip;</p>
+
+<p><span class='pullquote-right' data-pullquote='Docker forces you to think a little differently and once you
+get in the right mindset you&#8217;ll find yourself inventing new tricks.'></p>
+
+<p>Writing an efficient <code>Dockerfile</code> is part of the fun of working with Docker as a
+new technology. Docker forces you to think a little differently and once you
+get in the right mindset you&rsquo;ll find yourself inventing new tricks.</p>
+
+<p></span></p>
+
+<p>One key is to understand how Docker layers work. For now I&rsquo;ll direct you to the
+<a href="http://docs.docker.io/en/latest/terms/layer/">documentation</a> to see the
+graphic showing the various layers. Commands in your <code>Dockerfile</code> will create
+new layers. When possible, docker will try to use an existing cached layer if
+it&rsquo;s possible. You should try to take advantage of layers as much as possible
+by organizing your commands in a specific order. We&rsquo;ll get into that order in a
+second for dealing with node modules in your application.</p>
+
+<figure class='code'><figcaption><span>Example - package.json </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;myApp&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my awesome app...&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;private&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;scripts&quot;</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;start&quot;</span><span class="o">:</span> <span class="s2">&quot;node server.js&quot;</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;docker.io&quot;</span><span class="o">:</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;redis&quot;</span><span class="o">:</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;restify&quot;</span><span class="o">:</span> <span class="s2">&quot;*&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This snippet should generally go after all dependencies for your application
+have been installed, and just before you add your application&rsquo;s code to the
+container.</p>
+
+<p>So here&rsquo;s a full example:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>FROM ubuntu
+</span><span class='line'>MAINTAINER David Weinstein &lt;david@bitjudo.com&gt;
+</span><span class='line'>
+</span><span class='line'># install our dependencies and nodejs
+</span><span class='line'>RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" &gt; /etc/apt/sources.list
+</span><span class='line'>RUN apt-get update
+</span><span class='line'>RUN apt-get -y install python-software-properties git build-essential
+</span><span class='line'>RUN add-apt-repository -y ppa:chris-lea/node.js
+</span><span class='line'>RUN apt-get update
+</span><span class='line'>RUN apt-get -y install nodejs
+</span><span class='line'>
+</span><span class='line'># use changes to package.json to force Docker not to use the cache
+</span><span class='line'># when we change our application's nodejs dependencies:
+</span><span class='line'>ADD package.json /tmp/package.json
+</span><span class='line'>RUN cd /tmp && npm install
+</span><span class='line'>RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
+</span><span class='line'>
+</span><span class='line'># From here we load our application's code in, therefore the previous docker
+</span><span class='line'># "layer" thats been cached will be used if possible
+</span><span class='line'>WORKDIR /opt/app
+</span><span class='line'>ADD . /opt/app
+</span><span class='line'>
+</span><span class='line'>EXPOSE 3000
+</span><span class='line'>
+</span><span class='line'>CMD ["node", "server.js"]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The idea here is that if the <code>package.json</code> file changes (line 14) then Docker
+will re-run the <code>npm install</code> sequence (line 15)&hellip; otherwise Docker will use
+our cache and skip that part. This way our modules are cached so we aren&rsquo;t
+rebuilding them every time we change our apps source code!</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Authentication for a Docker Registry]]></title>
-    <link href="http://bitjudo.github.io/blog/2014/03/12/authentication-for-a-docker-registry/"/>
+    <link href="http://bitjudo.com/blog/2014/03/12/authentication-for-a-docker-registry/"/>
     <updated>2014-03-12T10:48:18-04:00</updated>
-    <id>http://bitjudo.github.io/blog/2014/03/12/authentication-for-a-docker-registry</id>
+    <id>http://bitjudo.com/blog/2014/03/12/authentication-for-a-docker-registry</id>
     <content type="html"><![CDATA[<p>Docker is an amazing tool that has only been around for a short while, but has taken the DevOps world by storm, and organizations from small to large are starting to use it from integration testing, to dynamically scaling an application&rsquo;s environment.</p>
 
 <p>Docker released an open-source registry that allows you to remote store images you create with docker, but what the did not release is an open-source index. The index is arguably (depending on your use case) the most important part, it handles the authentication layer of a registry. A registry can be used without and index, and if you are just wanting a place to store your images and you don&rsquo;t want to worry about who can access them, then no need to read on.</p>
@@ -38,9 +189,9 @@
   
   <entry>
     <title type="html"><![CDATA[Docker Scripts]]></title>
-    <link href="http://bitjudo.github.io/blog/2014/03/11/docker-scripts/"/>
+    <link href="http://bitjudo.com/blog/2014/03/11/docker-scripts/"/>
     <updated>2014-03-11T19:37:06-04:00</updated>
-    <id>http://bitjudo.github.io/blog/2014/03/11/docker-scripts</id>
+    <id>http://bitjudo.com/blog/2014/03/11/docker-scripts</id>
     <content type="html"><![CDATA[<p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
 
 <figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
