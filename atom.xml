@@ -4,7 +4,7 @@
   <title><![CDATA[bitJudo]]></title>
   <link href="http://bitjudo.com/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-13T11:39:34-04:00</updated>
+  <updated>2014-03-13T11:44:21-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -41,6 +41,9 @@ effect how to reduce development and debugging time for Node.js applications
 hosted in Docker containers. As you migrate from developing everything on your
 host system into Docker, there are some growing pains, mainly arround rapid
 change and test workflows.</p>
+
+<!-- more -->
+
 
 <p>There was a time when each time I&rsquo;d make a slight modification to my
 application, I&rsquo;d spend time waiting for my docker container to reubild, usually

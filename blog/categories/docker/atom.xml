@@ -4,7 +4,7 @@
   <title><![CDATA[Category: docker, | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-13T11:39:34-04:00</updated>
+  <updated>2014-03-13T11:44:21-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -41,6 +41,9 @@ effect how to reduce development and debugging time for Node.js applications
 hosted in Docker containers. As you migrate from developing everything on your
 host system into Docker, there are some growing pains, mainly arround rapid
 change and test workflows.</p>
+
+<!-- more -->
+
 
 <p>There was a time when each time I&rsquo;d make a slight modification to my
 application, I&rsquo;d spend time waiting for my docker container to reubild, usually
@@ -109,7 +112,7 @@ container.</p>
 
 <p>```
 FROM ubuntu
-MAINTAINER David Weinstein <a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#100;&#97;&#x76;&#x69;&#x64;&#x40;&#x62;&#x69;&#x74;&#x6a;&#x75;&#x64;&#x6f;&#x2e;&#x63;&#x6f;&#x6d;">&#100;&#x61;&#x76;&#105;&#x64;&#x40;&#x62;&#x69;&#x74;&#x6a;&#x75;&#x64;&#111;&#x2e;&#x63;&#111;&#x6d;</a></p>
+MAINTAINER David Weinstein <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#x64;&#x61;&#x76;&#x69;&#100;&#x40;&#x62;&#x69;&#x74;&#x6a;&#x75;&#100;&#x6f;&#46;&#x63;&#x6f;&#109;">&#x64;&#97;&#x76;&#105;&#100;&#64;&#x62;&#x69;&#x74;&#x6a;&#117;&#x64;&#x6f;&#x2e;&#x63;&#111;&#x6d;</a></p>
 
 <h1>install our dependencies and nodejs</h1>
 
