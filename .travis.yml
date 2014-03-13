@@ -1,5 +1,18 @@
+---
+branches:
+  only:
+  - source
 language: ruby
 rvm:
-  - 2.0.0
-  - 1.9.3
-script: bundle exec rake install; bundle exec rake generate
+- 1.9.3
+before_script:
+- export REPO_URL="https://$GH_TOKEN@github.com/$GH_REPO.git"
+- rake setup_github_pages[$REPO_URL]
+script:
+- rake generate
+after_script:
+- rake deploy
+env:
+  global:
+  - GH_REPO="bitjudo/bitjudo.github.io"
+  - secure: "AkzMHHR4MR3fE3iXx2tGzYUDihopwHhxarcScAnonfu2j9rciUVSN5qnBN8Zq2mBRlzFq8rBbmpOpFiyI/C6+OxX7662bmpsTeJlChebRw56lc3cLvOpT8iZAi5vveYvxi14o5iORMr/KJxh4j/oHAbndLMZEXrrwewrk/2LRmY="
