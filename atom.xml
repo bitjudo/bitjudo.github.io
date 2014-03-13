@@ -4,7 +4,7 @@
   <title><![CDATA[bitJudo]]></title>
   <link href="http://bitjudo.com/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-13T11:53:01-04:00</updated>
+  <updated>2014-03-13T12:19:29-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -46,7 +46,7 @@ change and test workflows.</p>
 
 
 <p>There was a time when each time I&rsquo;d make a slight modification to my
-application, I&rsquo;d spend time waiting for my docker container to reubild, usually
+application, I&rsquo;d spend time waiting for my docker container to rebuild, usually
 waiting for the modules to be reinstalled.  I&rsquo;d spend more time waiting for the
 dependencies to rebuild than actually fixing the problem.  I hope this article
 helps others get out of that ditch&hellip;</p>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: nodejs, | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/nodejs/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-13T11:53:01-04:00</updated>
+  <updated>2014-03-13T12:19:29-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -46,7 +46,7 @@ change and test workflows.</p>
 
 
 <p>There was a time when each time I&rsquo;d make a slight modification to my
-application, I&rsquo;d spend time waiting for my docker container to reubild, usually
+application, I&rsquo;d spend time waiting for my docker container to rebuild, usually
 waiting for the modules to be reinstalled.  I&rsquo;d spend more time waiting for the
 dependencies to rebuild than actually fixing the problem.  I hope this article
 helps others get out of that ditch&hellip;</p>
@@ -112,7 +112,7 @@ container.</p>
 
 <p>```
 FROM ubuntu
-MAINTAINER David Weinstein <a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x64;&#x61;&#x76;&#x69;&#x64;&#x40;&#98;&#x69;&#116;&#106;&#117;&#x64;&#111;&#46;&#x63;&#x6f;&#x6d;">&#100;&#x61;&#118;&#105;&#100;&#x40;&#98;&#105;&#x74;&#106;&#x75;&#100;&#x6f;&#x2e;&#x63;&#111;&#x6d;</a></p>
+MAINTAINER David Weinstein <a href="&#x6d;&#97;&#105;&#108;&#116;&#111;&#x3a;&#x64;&#97;&#x76;&#105;&#100;&#64;&#98;&#x69;&#116;&#106;&#117;&#100;&#x6f;&#46;&#x63;&#111;&#109;">&#x64;&#x61;&#118;&#105;&#x64;&#64;&#x62;&#105;&#116;&#x6a;&#117;&#100;&#x6f;&#x2e;&#99;&#x6f;&#109;</a></p>
 
 <h1>install our dependencies and nodejs</h1>
 
