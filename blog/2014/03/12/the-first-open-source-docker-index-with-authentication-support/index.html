@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>bitJudo</title>
+	<title>The First Open Source Docker Index with Authentication Support - bitJudo</title>
 	<meta name="author" content="a couple of geeks">
 
 	
-	<meta name="description" content="Docker is an amazing tool that has only been around for a short while, but has taken the DevOps world by storm, and organizations from small to &hellip;">
+	<meta name="description" content="Docker is an amazing tool that has only been around for a short while, but has taken the DevOps world by storm, and organizations from small to large &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -75,18 +75,9 @@
 	
 		
 	
-	<div id="content" class="inner">
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/03/12/the-first-open-source-docker-index-with-authentication-support/">
-		
-			The First Open Source Docker Index With Authentication Support</a>
-	</h2>
-	<div class="entry-content">
-		<p>Docker is an amazing tool that has only been around for a short while, but has taken the DevOps world by storm, and organizations from small to large are starting to use it from integration testing, to dynamically scaling an application&rsquo;s environment.</p>
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">The First Open Source Docker Index With Authentication Support</h2>
+	<div class="entry-content"><p>Docker is an amazing tool that has only been around for a short while, but has taken the DevOps world by storm, and organizations from small to large are starting to use it from integration testing, to dynamically scaling an application&rsquo;s environment.</p>
 
 <p>Docker released an open-source registry that allows you to remote store images you create with docker, but what the did not release is an open-source index. The index is arguably (depending on your use case) the most important part, it handles the authentication layer of a registry. A registry can be used without and index, and if you are just wanting a place to store your images and you don&rsquo;t want to worry about who can access them, then no need to read on.</p>
 
@@ -101,10 +92,7 @@
 <p>This was a big help for me, hopefully having this code out there can help others too.</p>
 
 <p>If you are interested in helping out pull requests are always welcome. If you have feedback, let me know.</p>
-
-		
-		
-	</div>
+</div>
 
 
 <div class="meta">
@@ -136,86 +124,26 @@
 </div>
 </article>
 
-
-    <article class="post">
-	<h2 class="title">
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
 		
-		<a href="/blog/2014/03/11/docker-scripts/">
 		
-			Docker Scripts</a>
-	</h2>
-	<div class="entry-content">
-		<p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
-
-<figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-ip (name or sha)</span>
-</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect <span class="nv">$1</span> | jq -r <span class="s1">&#39;.[0] | .NetworkSettings | .IPAddress&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I took it one step further and created several more one liners to get other various pieces of information from containers.</p>
-
-<figure class='code'><figcaption><span>docker-get-id </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-id (friendly-name)</span>
-</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect <span class="nv">$1</span> | jq -r <span class="s1">&#39;.[0] | .ID&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>docker-get-port </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-port (name|sha) port/protocol</span>
-</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect <span class="nv">$1</span> | jq -r <span class="s2">&quot;.[0] | .NetworkSettings | .Ports | .[\&quot;$2\&quot;] | .[0] | .HostPort&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The great news is that with <code>jq</code>, you can create simple one liners for just about anything with the <code>docker inspect</code> command and drop them in <code>/usr/local/bin</code> and make your administrative life a little easier. I&rsquo;m sure there are more useful ones, but those are the top 3 that David and I use that make things more simple.</p>
-
+		<a class="addthis_button_tweet"></a>
+		
 		
 		
 	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-11T19:37:06-04:00" pubdate data-updated="true">Mar 11<span>th</span>, 2014</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/docker/'>docker</a>, <a class='category' href='/blog/categories/scripts/'>scripts</a>
-
-</div>
-  <div class="author">
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Erik Kristensen</span></span>
-</div>
 	
 </div>
-</article>
 
-<nav id="pagenavi">
-    
-    
-    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
-</nav></div>
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
 	<footer id="footer" class="inner">Copyright &copy; 2014
 
     a couple of geeks
@@ -234,7 +162,10 @@
       var disqus_shortname = 'bitjudo';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://bitjudo.github.io/blog/2014/03/12/the-first-open-source-docker-index-with-authentication-support/';
+        var disqus_url = 'http://bitjudo.github.io/blog/2014/03/12/the-first-open-source-docker-index-with-authentication-support/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
