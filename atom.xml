@@ -4,7 +4,7 @@
   <title><![CDATA[bitJudo]]></title>
   <link href="http://bitjudo.github.io/atom.xml" rel="self"/>
   <link href="http://bitjudo.github.io/"/>
-  <updated>2014-03-12T16:54:07-04:00</updated>
+  <updated>2014-03-12T21:54:40-04:00</updated>
   <id>http://bitjudo.github.io/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[The First Open Source Docker Index with Authentication Support]]></title>
-    <link href="http://bitjudo.github.io/blog/2014/03/12/the-first-open-source-docker-index-with-authentication-support/"/>
+    <title type="html"><![CDATA[Authentication for a Docker Registry]]></title>
+    <link href="http://bitjudo.github.io/blog/2014/03/12/authentication-for-a-docker-registry/"/>
     <updated>2014-03-12T10:48:18-04:00</updated>
-    <id>http://bitjudo.github.io/blog/2014/03/12/the-first-open-source-docker-index-with-authentication-support</id>
+    <id>http://bitjudo.github.io/blog/2014/03/12/authentication-for-a-docker-registry</id>
     <content type="html"><![CDATA[<p>Docker is an amazing tool that has only been around for a short while, but has taken the DevOps world by storm, and organizations from small to large are starting to use it from integration testing, to dynamically scaling an application&rsquo;s environment.</p>
 
 <p>Docker released an open-source registry that allows you to remote store images you create with docker, but what the did not release is an open-source index. The index is arguably (depending on your use case) the most important part, it handles the authentication layer of a registry. A registry can be used without and index, and if you are just wanting a place to store your images and you don&rsquo;t want to worry about who can access them, then no need to read on.</p>
