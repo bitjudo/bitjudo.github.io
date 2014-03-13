@@ -33,7 +33,7 @@ change and test workflows.
 <!-- more -->
 
 There was a time when each time I'd make a slight modification to my
-application, I'd spend time waiting for my docker container to reubild, usually
+application, I'd spend time waiting for my docker container to rebuild, usually
 waiting for the modules to be reinstalled.  I'd spend more time waiting for the
 dependencies to rebuild than actually fixing the problem.  I hope this article
 helps others get out of that ditch...
