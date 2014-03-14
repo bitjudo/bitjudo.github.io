@@ -92,9 +92,10 @@ but before you ADD your app code to the container&hellip; this &hellip;">
 <p>Use the following code snippet (or a variation) after all your app dependencies
 but before you ADD your app code to the container&hellip; this way you don&rsquo;t rebuild
 your modules each time you re-build your container. If your <code>package.json</code> file
-changes then your modules will be rebuilt.</p>
+changes then your modules will be rebuilt. See this
+<a href="https://gist.github.com/dweinstein/9549580">gist</a> for a full example.</p>
 
-<figure class='code'><figcaption><span>Add this to your Dockerfile</span><a href='https://gist.github.com/dweinstein/9468644'>gist </a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Add this to your Dockerfile, after your deps, but before your app code.</span><a href='https://gist.github.com/dweinstein/9468644'>gist </a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='text'><span class='line'>ADD package.json /tmp/package.json
@@ -105,11 +106,11 @@ changes then your modules will be rebuilt.</p>
 
 <h1>Using cached layers for modules</h1>
 
-<p>This article is about making efficient use of docker layers, and as a side
-effect how to reduce development and debugging time for Node.js applications
+<p>This article is about making efficient use of docker layers. As a side effect
+we&rsquo;ll see how to reduce development and debugging time for Node.js applications
 hosted in Docker containers. As you migrate from developing everything on your
-host system into Docker, there are some growing pains, mainly arround rapid
-change and test workflows.</p>
+development host system to Docker, there are some growing pains&hellip; mainly
+arround interactive modify-and-test workflows.</p>
 
 
 		

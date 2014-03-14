@@ -4,7 +4,7 @@
   <title><![CDATA[Category: nodejs | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/nodejs/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-13T13:12:38-04:00</updated>
+  <updated>2014-03-14T11:55:38-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -23,43 +23,50 @@
 <p>Use the following code snippet (or a variation) after all your app dependencies
 but before you ADD your app code to the container&hellip; this way you don&rsquo;t rebuild
 your modules each time you re-build your container. If your <code>package.json</code> file
-changes then your modules will be rebuilt.</p>
+changes then your modules will be rebuilt. See this
+<a href="https://gist.github.com/dweinstein/9549580">gist</a> for a full example.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Add this to your Dockerfile <a href="https://gist.github.com/dweinstein/9468644">https://gist.github.com/dweinstein/9468644</a> gist </span></figcaption>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Add this to your Dockerfile, after your deps, but before your app code. <a href="https://gist.github.com/dweinstein/9468644">https://gist.github.com/dweinstein/9468644</a> gist </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>ADD package.json /tmp/package.json
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;ADD package.json /tmp/package.json
 </span><span class='line'>RUN cd /tmp &amp;amp;&amp;amp; npm install
 </span><span class='line'>RUN mkdir -p /opt/app &amp;amp;&amp;amp; cp -a /tmp/node_modules /opt/app/
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h1>Using cached layers for modules</h1>
 
-<p>This article is about making efficient use of docker layers, and as a side
-effect how to reduce development and debugging time for Node.js applications
+<p>This article is about making efficient use of docker layers. As a side effect
+we&rsquo;ll see how to reduce development and debugging time for Node.js applications
 hosted in Docker containers. As you migrate from developing everything on your
-host system into Docker, there are some growing pains, mainly arround rapid
-change and test workflows.</p>
+development host system to Docker, there are some growing pains&hellip; mainly
+arround interactive modify-and-test workflows.</p>
 
 <!-- more -->
 
 
-<p>There was a time when each time I&rsquo;d make a slight modification to my
-application, I&rsquo;d spend time waiting for my docker container to rebuild, usually
-waiting for the modules to be reinstalled.  I&rsquo;d spend more time waiting for the
-dependencies to rebuild than actually fixing the problem.  I hope this article
-helps others get out of that ditch&hellip;</p>
+<p>There was a time when each whenever I&rsquo;d make a slight modification to ap
+application I&rsquo;d spend time waiting for docker containers to rebuild, usually
+waiting for the modules to be reinstalled.  I spent more time waiting for the
+dependencies to build than actually fixing the problem. I hope this article
+helps others get out of that cycle&hellip;</p>
 
 <p>Surround your pullquote like this {" text to be quoted "}</p>
 
-<p>One key is to understand how Docker layers work. For now I&rsquo;ll direct you to the
-<a href="http://docs.docker.io/en/latest/terms/layer/">documentation</a> to see the
-graphic showing the various layers. Commands in your <code>Dockerfile</code> will create
-new layers. When possible, docker will try to use an existing cached layer if
-it&rsquo;s possible. You should try to take advantage of layers as much as possible
-by organizing your commands in a specific order. We&rsquo;ll get into that order in a
-second for dealing with node modules in your application.</p>
+<p>One key is to understand how Docker layers work. For now, visit the
+<a href="http://docs.docker.io/en/latest/terms/layer/">documentation</a> to see a graphic
+showing the various layers involved with Docker. Commands in your <code>Dockerfile</code>
+will create new layers. When possible, docker will try to use an existing
+cached layer if it&rsquo;s possible. You should try to take advantage of layers as
+much as possible by organizing your commands in a specific order. We&rsquo;ll get
+into that order in a second for dealing with node modules in your application.</p>
+
+<p>First here&rsquo;s an example dependency file for Node:</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Example &ndash; package.json </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -104,49 +111,131 @@ second for dealing with node modules in your application.</p>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>This snippet should generally go after all dependencies for your application
-have been installed, and just before you add your application&rsquo;s code to the
+<p>And here&rsquo;s what we&rsquo;re going to insert into our old Dockerfile:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Add this to your Dockerfile, after your deps, but before your app code. <a href="https://gist.github.com/dweinstein/9468644">https://gist.github.com/dweinstein/9468644</a> gist </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>ADD package.json /tmp/package.json
+</span><span class='line'>RUN cd /tmp &amp;amp;&amp;amp; npm install
+</span><span class='line'>RUN mkdir -p /opt/app &amp;amp;&amp;amp; cp -a /tmp/node_modules /opt/app/
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This snippet should generally go after all dependencies of your application
+are installed, but just before you add your application&rsquo;s code to the
 container.</p>
 
-<p>So here&rsquo;s a full example:</p>
+<p>Here&rsquo;s a full example:</p>
 
-<p>```
-FROM ubuntu
-MAINTAINER David Weinstein <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#x64;&#x61;&#x76;&#x69;&#100;&#x40;&#98;&#x69;&#x74;&#106;&#x75;&#x64;&#x6f;&#x2e;&#99;&#x6f;&#x6d;">&#100;&#97;&#118;&#x69;&#x64;&#64;&#98;&#x69;&#116;&#106;&#117;&#100;&#111;&#x2e;&#x63;&#111;&#109;</a></p>
+<p><div><script src='https://gist.github.com/9550188.js?file=Dockerfile'></script>
+<noscript><pre><code>FROM ubuntu
+MAINTAINER David Weinstein &lt;david@bitjudo.com&gt;
 
-<h1>install our dependencies and nodejs</h1>
-
-<p>RUN echo &ldquo;deb <a href="http://archive.ubuntu.com/ubuntu">http://archive.ubuntu.com/ubuntu</a> precise main universe&rdquo; > /etc/apt/sources.list
+# install our dependencies and nodejs
+RUN echo &quot;deb http://archive.ubuntu.com/ubuntu precise main universe&quot; &gt; /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get -y install python-software-properties git build-essential
 RUN add-apt-repository -y ppa:chris-lea/node.js
 RUN apt-get update
-RUN apt-get -y install nodejs</p>
+RUN apt-get -y install nodejs
 
-<h1>use changes to package.json to force Docker not to use the cache</h1>
-
-<h1>when we change our application&rsquo;s nodejs dependencies:</h1>
-
-<p>ADD package.json /tmp/package.json
+# use changes to package.json to force Docker not to use the cache
+# when we change our application's nodejs dependencies:
+ADD package.json /tmp/package.json
 RUN cd /tmp &amp;&amp; npm install
-RUN mkdir -p /opt/app &amp;&amp; cp -a /tmp/node_modules /opt/app/</p>
+RUN mkdir -p /opt/app &amp;&amp; cp -a /tmp/node_modules /opt/app/
 
-<h1>From here we load our application&rsquo;s code in, therefore the previous docker</h1>
+# From here we load our application's code in, therefore the previous docker
+# &quot;layer&quot; thats been cached will be used if possible
+WORKDIR /opt/app
+ADD . /opt/app
 
-<h1>&ldquo;layer&rdquo; thats been cached will be used if possible</h1>
+EXPOSE 3000
 
-<p>WORKDIR /opt/app
-ADD . /opt/app</p>
+CMD [&quot;node&quot;, &quot;server.js&quot;]
+</code></pre></noscript></div>
+</p>
 
-<p>EXPOSE 3000</p>
+<p>The idea here is that if the <code>package.json</code> file changes (<a href="https://gist.github.com/dweinstein/9549580#file-gistfile1-txt-L14">line
+14</a>) then
+Docker will re-run the <code>npm install</code> sequence (<a href="https://gist.github.com/dweinstein/9549580#file-gistfile1-txt-L15">line
+15</a>)&hellip;
+otherwise Docker will use our cache and skip that part.</p>
 
-<p>CMD [&ldquo;node&rdquo;, &ldquo;server.js&rdquo;]
-```</p>
+<p>Here&rsquo;s a log showing how building our Docker container is now using the <code>cache</code>
+for the module dependency step when building the Dockerfile shown earlier.</p>
 
-<p>The idea here is that if the <code>package.json</code> file changes (line 14) then Docker
-will re-run the <code>npm install</code> sequence (line 15)&hellip; otherwise Docker will use
-our cache and skip that part. This way our modules are cached so we aren&rsquo;t
-rebuilding them every time we change our apps source code!</p>
+<p><div><script src='https://gist.github.com/9550105.js'></script>
+<noscript><pre><code>Uploading context 4.608 kB
+Uploading context 
+Step 0 : FROM ubuntu
+ ---&gt; 9cd978db300e
+Step 1 : MAINTAINER David Weinstein &lt;david@bitjudo.com&gt;
+ ---&gt; Using cache
+ ---&gt; 67aeca8f12ae
+Step 2 : RUN echo &quot;deb http://archive.ubuntu.com/ubuntu precise main universe&quot; &gt; /etc/apt/sources.list
+ ---&gt; Using cache
+ ---&gt; be8f73b1204f
+Step 3 : RUN apt-get update
+ ---&gt; Using cache
+ ---&gt; 70395f80789a
+Step 4 : RUN apt-get -y install python-software-properties git build-essential
+ ---&gt; Using cache
+ ---&gt; 58821e45ea25
+Step 5 : RUN add-apt-repository -y ppa:chris-lea/node.js
+ ---&gt; Using cache
+ ---&gt; 79afb0c0539a
+Step 6 : RUN apt-get update
+ ---&gt; Using cache
+ ---&gt; 18fc6aa866d8
+Step 7 : RUN apt-get -y install nodejs
+ ---&gt; Using cache
+ ---&gt; 1f1f41f47329
+Step 8 : ADD package.json /tmp/package.json
+ ---&gt; Using cache
+ ---&gt; 0331fd81b4c8
+Step 9 : RUN cd /tmp &amp;&amp; npm install
+ ---&gt; Using cache
+ ---&gt; 95ee8b27b72b
+Step 10 : RUN mkdir -p /opt/app &amp;&amp; cp -a /tmp/node_modules /opt/app/
+ ---&gt; Using cache
+ ---&gt; 40102f5ce4f1
+Step 11 : WORKDIR /opt/app
+ ---&gt; Using cache
+ ---&gt; 6a1ad0dca915
+Step 12 : ADD . /opt/app
+ ---&gt; 6b9bdaa0e7a2
+Step 13 : EXPOSE 3000
+ ---&gt; Running in 722c8f0b88e2
+ ---&gt; d97a3d372bda
+Step 14 : CMD [&quot;node&quot;, &quot;server.js&quot;]
+ ---&gt; Running in 3309a2dab1cc
+ ---&gt; a0b19d7625d3
+Successfully built a0b19d7625d3
+</code></pre></noscript></div>
+</p>
+
+<p>This whole example is contained in this
+<a href="https://gist.github.com/dweinstein/9550188">gist</a> so that you can repeat it
+exactly as I have.</p>
+
+<p>Assuming you&rsquo;ve built the container once before (i.e., <code>docker build -t
+testProject .</code>), and then uncommented <a href="https://gist.github.com/dweinstein/9550188#file-server-js-L7">line
+7</a> in our example
+<code>server.js</code> the  above log shows what happens when we rebuild our container,
+i.e., simulating a change to our app&rsquo;s logic. Looking at the log, on <a href="https://gist.github.com/dweinstein/9550105#file-gistfile1-txt-L32">line
+32</a> the
+<code>cache</code> was used but on <a href="https://gist.github.com/dweinstein/9550105#file-gistfile1-txt-L38">line
+38</a> the
+cache was <em>not</em> used&hellip;</p>
+
+<h1>Conclusion</h1>
+
+<p>Now our modules are cached so we aren&rsquo;t rebuilding them every time we change
+our apps source code! This will speed up testing and debugging nodejs apps.
+Also this caching technique can work for ruby gems which we&rsquo;ll talk about in
+another post.</p>
 ]]></content>
   </entry>
   
