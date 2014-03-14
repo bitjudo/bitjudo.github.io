@@ -14,7 +14,7 @@ Use the following code snippet (or a variation) after all your app dependencies
 but before you ADD your app code to the container... this way you don't rebuild
 your modules each time you re-build your container. If your `package.json` file
 changes then your modules will be rebuilt. See this
-[gist](https://gist.github.com/dweinstein/9549580) for a full example.
+[gist](https://gist.github.com/dweinstein/9550188) for a full example.
 
 {% codeblock lang:text Add this to your Dockerfile, after your deps, but before your app code. https://gist.github.com/dweinstein/9468644 gist %}
 
@@ -92,9 +92,9 @@ Here's a full example:
 {% gist 9550188 Dockerfile %}
 
 The idea here is that if the `package.json` file changes ([line
-14](https://gist.github.com/dweinstein/9549580#file-gistfile1-txt-L14)) then
+14](https://gist.github.com/dweinstein/9550188#file-dockerfile-L14)) then
 Docker will re-run the `npm install` sequence ([line
-15](https://gist.github.com/dweinstein/9549580#file-gistfile1-txt-L15))...
+15](https://gist.github.com/dweinstein/9550188#file-dockerfile-L15))...
 otherwise Docker will use our cache and skip that part. 
 
 Here's a log showing how building our Docker container is now using the `cache`
