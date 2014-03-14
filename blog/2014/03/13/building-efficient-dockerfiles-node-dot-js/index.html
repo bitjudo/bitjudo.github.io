@@ -180,7 +180,35 @@ into that order in a second for dealing with node modules in your application.</
 are installed, but just before you add your application&rsquo;s code to the
 container.</p>
 
-<p>Here&rsquo;s a full example:</p>
+<p>A <em>bad</em> <code>Dockerfile</code> could look like this:</p>
+
+<div><script src='https://gist.github.com/9550778.js'></script>
+<noscript><pre><code>FROM ubuntu
+
+RUN echo &quot;deb http://archive.ubuntu.com/ubuntu precise main universe&quot; &gt; /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get -y install python-software-properties git build-essential
+RUN add-apt-repository -y ppa:chris-lea/node.js
+RUN apt-get update
+RUN apt-get -y install nodejs
+
+WORKDIR /opt/app
+
+ADD . /opt/app
+
+RUN npm install
+
+EXPOSE 3001
+
+CMD [&quot;node&quot;, &quot;server.js&quot;]</code></pre></noscript></div>
+
+
+<p>This is bad because we copy the app&rsquo;s working directory  on <a href="https://gist.github.com/dweinstein/9550778#file-bad-dockerfile-L12">line
+12</a>&mdash;which
+has our <code>package.json</code>&mdash;<code>.</code> to our container and then build the modules. This
+results in our modules being built everytime we make a change to a file in <code>.</code>.</p>
+
+<p>Here&rsquo;s a full example of a better implementation:</p>
 
 <div><script src='https://gist.github.com/9550188.js?file=Dockerfile'></script>
 <noscript><pre><code>FROM ubuntu
