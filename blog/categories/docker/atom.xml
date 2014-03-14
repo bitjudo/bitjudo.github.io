@@ -4,7 +4,7 @@
   <title><![CDATA[Category: docker | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-14T11:55:38-04:00</updated>
+  <updated>2014-03-14T12:03:27-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -24,7 +24,7 @@
 but before you ADD your app code to the container&hellip; this way you don&rsquo;t rebuild
 your modules each time you re-build your container. If your <code>package.json</code> file
 changes then your modules will be rebuilt. See this
-<a href="https://gist.github.com/dweinstein/9549580">gist</a> for a full example.</p>
+<a href="https://gist.github.com/dweinstein/9550188">gist</a> for a full example.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Add this to your Dockerfile, after your deps, but before your app code. <a href="https://gist.github.com/dweinstein/9468644">https://gist.github.com/dweinstein/9468644</a> gist </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -157,9 +157,9 @@ CMD [&quot;node&quot;, &quot;server.js&quot;]
 </code></pre></noscript></div>
 </p>
 
-<p>The idea here is that if the <code>package.json</code> file changes (<a href="https://gist.github.com/dweinstein/9549580#file-gistfile1-txt-L14">line
+<p>The idea here is that if the <code>package.json</code> file changes (<a href="https://gist.github.com/dweinstein/9550188#file-dockerfile-L14">line
 14</a>) then
-Docker will re-run the <code>npm install</code> sequence (<a href="https://gist.github.com/dweinstein/9549580#file-gistfile1-txt-L15">line
+Docker will re-run the <code>npm install</code> sequence (<a href="https://gist.github.com/dweinstein/9550188#file-dockerfile-L15">line
 15</a>)&hellip;
 otherwise Docker will use our cache and skip that part.</p>
 
