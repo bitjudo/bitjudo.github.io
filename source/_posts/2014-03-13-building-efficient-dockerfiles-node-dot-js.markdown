@@ -87,7 +87,16 @@ This snippet should generally go after all dependencies of your application
 are installed, but just before you add your application's code to the
 container.
 
-Here's a full example:
+A *bad* `Dockerfile` could look like this:
+
+{% gist 9550778 %} 
+
+This is bad because we copy the app's working directory  on [line
+12](https://gist.github.com/dweinstein/9550778#file-bad-dockerfile-L12)--which
+has our `package.json`--`.` to our container and then build the modules. This
+results in our modules being built everytime we make a change to a file in `.`.
+
+Here's a full example of a better implementation:
 
 {% gist 9550188 Dockerfile %}
 
