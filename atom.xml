@@ -4,7 +4,7 @@
   <title><![CDATA[bitJudo]]></title>
   <link href="http://bitjudo.com/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-03-14T12:11:10-04:00</updated>
+  <updated>2014-03-17T15:44:25-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -46,11 +46,11 @@ arround interactive modify-and-test workflows.</p>
 <!-- more -->
 
 
-<p>There was a time when each whenever I&rsquo;d make a slight modification to ap
-application I&rsquo;d spend time waiting for docker containers to rebuild, usually
-waiting for the modules to be reinstalled.  I spent more time waiting for the
-dependencies to build than actually fixing the problem. I hope this article
-helps others get out of that cycle&hellip;</p>
+<p>There was a time that whenever I&rsquo;d make a slight modification to an application
+I&rsquo;d spend time waiting for docker containers to rebuild. Usually I waiting for
+the modules to be reinstalled.  I spent more time waiting for the dependencies
+to build than actually fixing the problem. I hope this article helps others get
+out of that cycle&hellip;</p>
 
 <p><span class='pullquote-right' data-pullquote='Docker forces you to think a differently. Once you get in
 the right mindset you&#8217;ll find yourself inventing new tricks.'></p>
