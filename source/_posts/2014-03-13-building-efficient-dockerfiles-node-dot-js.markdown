@@ -34,11 +34,11 @@ arround interactive modify-and-test workflows.
 
 <!-- more -->
 
-There was a time when each whenever I'd make a slight modification to ap
-application I'd spend time waiting for docker containers to rebuild, usually
-waiting for the modules to be reinstalled.  I spent more time waiting for the
-dependencies to build than actually fixing the problem. I hope this article
-helps others get out of that cycle...
+There was a time that whenever I'd make a slight modification to an application
+I'd spend time waiting for docker containers to rebuild. Usually I waiting for
+the modules to be reinstalled.  I spent more time waiting for the dependencies
+to build than actually fixing the problem. I hope this article helps others get
+out of that cycle...
 
 {% pullquote %}
 
