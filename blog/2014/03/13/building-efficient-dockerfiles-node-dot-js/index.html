@@ -106,11 +106,11 @@ arround interactive modify-and-test workflows.</p>
 <!-- more -->
 
 
-<p>There was a time that whenever I&rsquo;d make a slight modification to an application
-I&rsquo;d spend time waiting for docker containers to rebuild. Usually I waiting for
-the modules to be reinstalled.  I spent more time waiting for the dependencies
-to build than actually fixing the problem. I hope this article helps others get
-out of that cycle&hellip;</p>
+<p>There was a time when each whenever I&rsquo;d make a slight modification to ap
+application I&rsquo;d spend time waiting for docker containers to rebuild, usually
+waiting for the modules to be reinstalled.  I spent more time waiting for the
+dependencies to build than actually fixing the problem. I hope this article
+helps others get out of that cycle&hellip;</p>
 
 <p><span class='pullquote-right' data-pullquote='Docker forces you to think a differently. Once you get in
 the right mindset you&#8217;ll find yourself inventing new tricks.'></p>
@@ -195,9 +195,7 @@ RUN apt-get -y install nodejs
 WORKDIR /opt/app
 
 ADD . /opt/app
-
 RUN npm install
-
 EXPOSE 3001
 
 CMD [&quot;node&quot;, &quot;server.js&quot;]</code></pre></noscript></div>
@@ -223,12 +221,12 @@ RUN apt-get update
 RUN apt-get -y install nodejs
 
 # use changes to package.json to force Docker not to use the cache
-# when we change our application's nodejs dependencies:
+# when we change our application&#39;s nodejs dependencies:
 ADD package.json /tmp/package.json
 RUN cd /tmp &amp;&amp; npm install
 RUN mkdir -p /opt/app &amp;&amp; cp -a /tmp/node_modules /opt/app/
 
-# From here we load our application's code in, therefore the previous docker
+# From here we load our application&#39;s code in, therefore the previous docker
 # &quot;layer&quot; thats been cached will be used if possible
 WORKDIR /opt/app
 ADD . /opt/app
