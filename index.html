@@ -7,7 +7,8 @@
 	<meta name="author" content="a couple of geeks">
 
 	
-	<meta name="description" content="Recently, I was challenged with ensuring the encryption of all data at rest for several servers. Unlike laptops or desktops, server nodes need to be &hellip;">
+	<meta name="description" content="TL;DR Use the following code snippet (or a variation) after all your app dependencies
+but before you ADD your app code to the container&hellip; this &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -81,60 +82,6 @@
     <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/2014/03/19/just-in-time-encryption-keys-using-saltstack/">
-		
-			Just in Time Encryption Keys Using SaltStack</a>
-	</h2>
-	<div class="entry-content">
-		<p>Recently, I was challenged with ensuring the encryption of all data at rest for several servers.  Unlike laptops or desktops, server nodes need to be able to come up and down in response to various requests. When spinning up multiple nodes you definitely don’t want them waiting for human interaction. Enter SaltStack and LUKS volumes. The real challenge was how to provide full disk encryption without storing the encryption key itself on the server.</p>
-
-<p>Since these were Linux servers, LUKS encryption made the most sense. In essence what this tutorial describes is a way to provide “just in time” delivery of disk encryption keys. This is done using SaltStack features.</p>
-
-<p>The rest of this article is a TL;DR combined with a tutorial of sorts to help you set this up.</p>
-
-<h1>TL;DR</h1>
-
-<p>By taking advantage of a couple features that <a href="http://www.saltstack.com/">SaltStack</a> brings to the table, it is possible to automate the mounting of your LUKS volumes after the server has started. The salt minion has the ability to run certain states (scripts) upon start.  This allows the user to run a LUKS state that will verify the existence of the volume, unlock it, and mount it. Using salt states also allows the user to build state dependencies, or trigger other states to run.  These features ensure that any services requiring the encrypted volume only start after the volume is available.</p>
-
-
-		
-		<a href="/blog/2014/03/19/just-in-time-encryption-keys-using-saltstack/" class="more-link">Read on &rarr;</a>
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-19T11:15:00-04:00" pubdate data-updated="true">Mar 19<span>th</span>, 2014</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/encryption/'>encryption</a>, <a class='category' href='/blog/categories/longread/'>longread</a>, <a class='category' href='/blog/categories/luks/'>luks</a>, <a class='category' href='/blog/categories/saltstack/'>saltstack</a>, <a class='category' href='/blog/categories/tutorial/'>tutorial</a>
-
-</div>
-  <div class="author">
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Erik Kristensen</span></span>
-</div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
 		<a href="/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/">
 		
 			Building Efficient Dockerfiles - Node.js</a>
@@ -145,10 +92,9 @@
 <p>Use the following code snippet (or a variation) after all your app dependencies
 but before you ADD your app code to the container&hellip; this way you don&rsquo;t rebuild
 your modules each time you re-build your container. If your <code>package.json</code> file
-changes then your modules will be rebuilt. See this
-<a href="https://gist.github.com/dweinstein/9550188">gist</a> for a full example.</p>
+changes then your modules will be rebuilt.</p>
 
-<figure class='code'><figcaption><span>Add this to your Dockerfile, after your deps, but before your app code.</span><a href='https://gist.github.com/dweinstein/9468644'>gist </a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Add this to your Dockerfile</span><a href='https://gist.github.com/dweinstein/9468644'>gist </a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='text'><span class='line'>ADD package.json /tmp/package.json
@@ -159,11 +105,11 @@ changes then your modules will be rebuilt. See this
 
 <h1>Using cached layers for modules</h1>
 
-<p>This article is about making efficient use of docker layers. As a side effect
-we&rsquo;ll see how to reduce development and debugging time for Node.js applications
+<p>This article is about making efficient use of docker layers, and as a side
+effect how to reduce development and debugging time for Node.js applications
 hosted in Docker containers. As you migrate from developing everything on your
-development host system to Docker, there are some growing pains&hellip; mainly
-arround interactive modify-and-test workflows.</p>
+host system into Docker, there are some growing pains, mainly arround rapid
+change and test workflows.</p>
 
 
 		
