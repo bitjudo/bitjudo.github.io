@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: devops | bitJudo]]></title>
-  <link href="http://bitjudo.com/blog/categories/devops/atom.xml" rel="self"/>
+  <title><![CDATA[Category: luks | bitJudo]]></title>
+  <link href="http://bitjudo.com/blog/categories/luks/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
   <updated>2014-04-02T13:54:02-04:00</updated>
   <id>http://bitjudo.com/</id>
@@ -153,61 +153,6 @@ enc_volume_mount:
 <p>I&rsquo;m pretty happy with this solution, it allows my servers to be rebooted without human interaction and for the critical services to come online once their data is available. It keeps the encryption key from having to be stored on the server. Using this strategy you could easily expand this for other encryption technologies.</p>
 
 <p>Thoughts, comments, questions? Let me hear from you. Leave your comments below.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Docker Scripts]]></title>
-    <link href="http://bitjudo.com/blog/2014/03/11/docker-scripts/"/>
-    <updated>2014-03-11T19:37:06-04:00</updated>
-    <id>http://bitjudo.com/blog/2014/03/11/docker-scripts</id>
-    <content type="html"><![CDATA[<p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
-
-<!-- more -->
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;Usage: docker-get-ip <span class="o">(</span>name or sha<span class="o">)</span>&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="o">[</span> -n &amp;ldquo;<span class="nv">$1</span>&amp;rdquo; <span class="o">]</span> &amp;amp;&amp;amp; docker inspect <span class="nv">$1</span> | jq -r &amp;lsquo;.<span class="o">[</span>0<span class="o">]</span> | .NetworkSettings | .IPAddress&amp;rsquo;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>I took it one step further and created several more one liners to get other various pieces of information from containers.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-get-id </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;Usage: docker-get-id <span class="o">(</span>friendly-name<span class="o">)</span>&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="o">[</span> -n &amp;ldquo;<span class="nv">$1</span>&amp;rdquo; <span class="o">]</span> &amp;amp;&amp;amp; docker inspect <span class="nv">$1</span> | jq -r &amp;lsquo;.<span class="o">[</span>0<span class="o">]</span> | .ID&amp;rsquo;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-get-port </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;Usage: docker-get-port <span class="o">(</span>name|sha<span class="o">)</span> port/protocol&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="o">[</span> -n &amp;ldquo;<span class="nv">$1</span>&amp;rdquo; <span class="o">]</span> &amp;amp;&amp;amp; docker inspect <span class="nv">$1</span> | jq -r &amp;ldquo;.<span class="o">[</span>0<span class="o">]</span> | .NetworkSettings | .Ports | .<span class="o">[</span><span class="se">\&amp;</span>rdquo;<span class="nv">$2</span><span class="se">\&amp;</span>ldquo;<span class="o">]</span> | .<span class="o">[</span>0<span class="o">]</span> | .HostPort&amp;rdquo;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>The great news is that with <code>jq</code>, you can create simple one liners for just about anything with the <code>docker inspect</code> command and drop them in <code>/usr/local/bin</code> and make your administrative life a little easier. I&rsquo;m sure there are more useful ones, but those are the top 3 that David and I use that make things more simple.</p>
 ]]></content>
   </entry>
   
