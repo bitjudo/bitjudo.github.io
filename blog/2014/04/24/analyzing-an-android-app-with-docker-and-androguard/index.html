@@ -186,7 +186,8 @@ and you should get something like this:</p>
 
 
 <p>This is an interactive shell session where you can begin to play with the apk
-which I stored under <code>data-container/apks/test.apk</code>.</p>
+which I stored under <code>data-container/apks/test.apk</code>. Inside the container though it&rsquo;ll
+show up as <code>/apks/test.apk</code>.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -478,7 +479,7 @@ troll someone :&ndash;)</p>
 <span class='line-number'>46</span>
 <span class='line-number'>47</span>
 <span class='line-number'>48</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>int counter = 0;        
+</pre></td><td class='code'><pre><code class=''><span class='line'>int counter = 0;
 </span><span class='line'>while (counter++ &lt; iterations) {
 </span><span class='line'>
 </span><span class='line'>  long endTime = System.currentTimeMillis() + durSec * 1000;

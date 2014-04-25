@@ -4,7 +4,7 @@
   <title><![CDATA[Category: docker | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-04-24T20:49:10-04:00</updated>
+  <updated>2014-04-24T20:56:43-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -98,7 +98,8 @@ In [1]:
 </code></p>
 
 <p>This is an interactive shell session where you can begin to play with the apk
-which I stored under <code>data-container/apks/test.apk</code>.</p>
+which I stored under <code>data-container/apks/test.apk</code>. Inside the container though it&rsquo;ll
+show up as <code>/apks/test.apk</code>.</p>
 
 <p><code>
 In [1]: ls -lh /apks/
@@ -262,7 +263,7 @@ troll someone :&ndash;)</p>
 <p>Here&rsquo;s what I think they meant to do:</p>
 
 <p>```
-int counter = 0;      <br/>
+int counter = 0;
 while (counter++ &lt; iterations) {</p>
 
 <p>  long endTime = System.currentTimeMillis() + durSec * 1000;
