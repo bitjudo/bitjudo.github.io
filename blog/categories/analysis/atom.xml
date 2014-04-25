@@ -4,7 +4,7 @@
   <title><![CDATA[Category: analysis | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/analysis/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-04-24T20:56:43-04:00</updated>
+  <updated>2014-04-24T21:00:39-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -191,7 +191,9 @@ In [8]: show_Paths(analysis[1], analysis[2].tainted_packages.search_packages(&ls
 
 <p>Cool, so Feeder looks like an android
 <a href="http://developer.android.com/reference/android/app/Service.html">Service</a>.
-What happens when the <code>handleMessage</code> gets called back? Let&rsquo;s decompile the whole apk (using <a href="https://code.google.com/p/androguard/wiki/Decompiler">dad</a>), but focus on the Feeder class the moment:</p>
+What happens when the <code>handleMessage</code> gets called back? Let&rsquo;s decompile the
+whole apk (using <a href="https://code.google.com/p/androguard/wiki/Decompiler">dad</a>),
+but focus on the Feeder class for the moment:</p>
 
 <p>```
 In [9]: a, d, dx = AnalyzeAPK(&ldquo;apks/test.apk&rdquo;, decompiler=&ldquo;dad&rdquo;)
