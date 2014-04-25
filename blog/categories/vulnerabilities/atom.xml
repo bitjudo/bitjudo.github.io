@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vulnerabilities | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/vulnerabilities/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-04-24T20:45:18-04:00</updated>
+  <updated>2014-04-24T20:47:36-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -175,8 +175,9 @@ In [7]: show_Paths(analysis[1], analysis[2].tainted_packages.search_packages('ga
 <p>What&rsquo;s this <code>Feeder</code> thing?</p>
 
 <p>Let&rsquo;s find all &ldquo;paths&rdquo; for the package name <code>Feeder</code>. This results in us seeing all
-class
-```
+classes/methods that have the word <code>Feeder</code> in their package path.</p>
+
+<p>```
 In [8]: show_Paths(analysis[1], analysis[2].tainted_packages.search_packages(&lsquo;Feeder&rsquo;))
 1 Lcom/example/gangrene/Feeder;&ndash;>onCreate()V (0x54) &mdash;&ndash;> Lcom/example/gangrene/Feeder$ServiceHandler;&ndash;><init>(Lcom/example/gangrene/Feeder; Landroid/os/Looper;)V
 1 Lcom/example/gangrene/Feeder;&ndash;>onStartCommand(Landroid/content/Intent; I I)I (0x52) &mdash;&ndash;> Lcom/example/gangrene/Feeder$ServiceHandler;&ndash;>obtainMessage()Landroid/os/Message;
