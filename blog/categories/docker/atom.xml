@@ -4,7 +4,7 @@
   <title><![CDATA[Category: docker | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-04-02T13:54:02-04:00</updated>
+  <updated>2014-04-24T20:44:48-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -12,6 +12,320 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Analyzing an Android app with Docker and Androguard]]></title>
+    <link href="http://bitjudo.com/blog/2014/04/24/analyzing-an-android-app-with-docker-and-androguard/"/>
+    <updated>2014-04-24T19:48:05-04:00</updated>
+    <id>http://bitjudo.com/blog/2014/04/24/analyzing-an-android-app-with-docker-and-androguard</id>
+    <content type="html"><![CDATA[<h1>TL;DR</h1>
+
+<p>Have you wanted to get into analyzing Android apps&mdash;for vulnerabilities,
+malware, or just for fun? Maybe you&rsquo;ve experienced problems getting an
+environment setup because of complex tool dependencies, long READMEs, or just
+never really knew where to get started? This article can help. Using docker I
+can show you how to tear apart your first Android application, and maybe even
+find some vulnerabilities while you&rsquo;re at it.</p>
+
+<h1>Dependencies</h1>
+
+<p>I assume you have a working docker setup. If you aren&rsquo;t sure how to set it up
+on your platform, try following one of these
+<a href="http://docs.docker.io/installation/">guides</a>.</p>
+
+<h1>Download the repo</h1>
+
+<p>First check out the code from
+<a href="https://github.com/dweinstein/dockerfile-androguard">github</a> by running <code>git
+clone git@github.com:dweinstein/dockerfile-androguard.git</code> or <code>git clone
+https://github.com/dweinstein/dockerfile-androguard.git</code>.</p>
+
+<p>This repo uses a <code>Dockerfile</code> to declare all the dependencies that you would
+need if you were going to install the
+<a href="https://code.google.com/p/androguard/">Androguard</a> tool your self. If you want
+to know how to do it all manually, you can
+<a href="https://code.google.com/p/androguard/wiki/Installation">see</a> for yourself.</p>
+
+<h1>Build</h1>
+
+<p>After cloning the repository, <code>cd</code> into the directory and you should see something like this:</p>
+
+<p><code>
+➜  dockerfile-androguard git:(master) ls
+Dockerfile     Makefile       README.md      data-container
+</code></p>
+
+<p>You can build by doing a <code>make build</code></p>
+
+<h1>Run</h1>
+
+<p>Once built, you have all you need to start analyzing your first app. I even put
+an app in the repository for you to have something to play with right away! Just do a <code>make run</code>
+and you should get something like this:</p>
+
+<p><code>
+➜  dockerfile-androguard git:(master) make run
+make -C data-container build
+docker build -t androguard-data .
+Uploading context 133.1 kB
+Uploading context
+Step 0 : FROM busybox
+ ---&gt; 769b9341d937
+Step 1 : ADD apks /apks
+ ---&gt; Using cache
+ ---&gt; 595c1e66e01f
+Step 2 : VOLUME ["/apks"]
+ ---&gt; Using cache
+ ---&gt; 7d40787633a5
+Step 3 : VOLUME ["/notes"]
+ ---&gt; Using cache
+ ---&gt; c0dc7db54a78
+Step 4 : CMD ["/bin/true"]
+ ---&gt; Using cache
+ ---&gt; 845911656aad
+Successfully built 845911656aad
+make -C data-container run
+docker run --name androguard_data androguard-data &amp;&gt; /dev/null
+make[1]: [run] Error 1 (ignored)
+docker run -t -i --rm --volumes-from androguard_data androguard
+/usr/local/lib/python2.7/dist-packages/ipython-2.0.0-py2.7.egg/IPython/frontend.py:30: UserWarning: The top-level `frontend` package has been deprecated. All its subpackages have been moved to the top `IPython` level.
+  warn("The top-level `frontend` package has been deprecated. "
+Androlyze version 2.0
+In [1]:
+</code></p>
+
+<p>This is an interactive shell session where you can begin to play with the apk
+which I stored under <code>data-container/apks/test.apk</code>.</p>
+
+<p><code>
+In [1]: ls -lh /apks/
+total 128K
+-rw-r--r-- 1 root root 125K Apr 23 15:10 test.apk
+</code></p>
+
+<p>Load the APK into our APK object:</p>
+
+<p><code>
+In [2]: apk = APK('apks/test.apk')
+</code></p>
+
+<p>List the files inside of it:</p>
+
+<p><code>
+In [3]: apk.get_files()
+Out[3]:
+[u'META-INF/MANIFEST.MF',
+ u'META-INF/APKIL.SF',
+ u'META-INF/APKIL.RSA',
+ u'res/layout/activity_main.xml',
+ u'res/menu/activity_main.xml',
+ u'AndroidManifest.xml',
+ u'resources.arsc',
+ u'res/drawable-hdpi/ic_action_search.png',
+ u'res/drawable-hdpi/ic_launcher.png',
+ u'res/drawable-ldpi/ic_launcher.png',
+ u'res/drawable-mdpi/ic_action_search.png',
+ u'res/drawable-mdpi/ic_launcher.png',
+ u'res/drawable-xhdpi/ic_action_search.png',
+ u'res/drawable-xhdpi/ic_launcher.png',
+ u'classes.dex']
+</code></p>
+
+<p>Load up some more complex analysis objects:</p>
+
+<p>```
+In [4]:  analysis = AnalyzeAPK(&lsquo;apks/test.apk&rsquo;)</p>
+
+<p>In [5]: analysis
+Out[5]:
+(&lt;androguard.core.bytecodes.apk.APK instance at 0x1ce7c20>,
+ &lt;androguard.core.bytecodes.dvm.DalvikVMFormat at 0x1cdbfd0>,
+ &lt;androguard.core.analysis.analysis.uVMAnalysis instance at 0x326ed88>)
+```</p>
+
+<p>Get the application&rsquo;s <a href="http://developer.android.com/training/basics/activity-lifecycle/starting.html">main
+activity</a>
+(the first class that runs when the app starts&hellip;</p>
+
+<p>```
+In [6]: apk.get_main_activity()
+Out[6]: u'com.example.gangrene.GangreneActivity'</p>
+
+<p>```</p>
+
+<p>Get all classes/methods that have the word <code>gangrene</code> in them:
+<code>
+In [7]: show_Paths(analysis[1], analysis[2].tainted_packages.search_packages('gangrene'))
+1 Lcom/example/gangrene/GangreneActivity;-&gt;onCreate(Landroid/os/Bundle;)V (0x34) ---&gt; Lcom/example/gangrene/GangreneActivity$1;-&gt;&lt;init&gt;(Lcom/example/gangrene/GangreneActivity;)V
+1 Lcom/example/gangrene/GangreneActivity$1;-&gt;onClick(Landroid/view/View;)V (0x1a) ---&gt; Lcom/example/gangrene/GangreneActivity;-&gt;startService(Landroid/content/Intent;)Landroid/content/ComponentName;
+1 Lcom/example/gangrene/GangreneActivity;-&gt;onCreate(Landroid/os/Bundle;)V (0xa) ---&gt; Lcom/example/gangrene/GangreneActivity;-&gt;setContentView(I)V
+1 Lcom/example/gangrene/GangreneActivity;-&gt;onCreate(Landroid/os/Bundle;)V (0x24) ---&gt; Lcom/example/gangrene/GangreneActivity;-&gt;findViewById(I)Landroid/view/View;
+1 Lcom/example/gangrene/GangreneActivity;-&gt;onCreateOptionsMenu(Landroid/view/Menu;)Z (0x0) ---&gt; Lcom/example/gangrene/GangreneActivity;-&gt;getMenuInflater()Landroid/view/MenuInflater;
+1 Lcom/example/gangrene/Feeder;-&gt;onCreate()V (0x54) ---&gt; Lcom/example/gangrene/Feeder$ServiceHandler;-&gt;&lt;init&gt;(Lcom/example/gangrene/Feeder; Landroid/os/Looper;)V
+1 Lcom/example/gangrene/Feeder;-&gt;onStartCommand(Landroid/content/Intent; I I)I (0x52) ---&gt; Lcom/example/gangrene/Feeder$ServiceHandler;-&gt;obtainMessage()Landroid/os/Message;
+1 Lcom/example/gangrene/Feeder;-&gt;onStartCommand(Landroid/content/Intent; I I)I (0x66) ---&gt; Lcom/example/gangrene/Feeder$ServiceHandler;-&gt;sendMessage(Landroid/os/Message;)Z
+1 Lcom/example/gangrene/Feeder$ServiceHandler;-&gt;handleMessage(Landroid/os/Message;)V (0x2c) ---&gt; Lcom/example/gangrene/Feeder;-&gt;stopSelf(I)V
+1 Lcom/example/gangrene/Feeder$ServiceHandler;-&gt;handleMessage(Landroid/os/Message;)V (0x6a) ---&gt; Lcom/example/gangrene/Feeder;-&gt;getFilesDir()Ljava/io/File;
+1 Lcom/example/gangrene/Feeder$ServiceHandler;-&gt;handleMessage(Landroid/os/Message;)V (0xb6) ---&gt; Lcom/example/gangrene/Feeder;-&gt;access$0(Lcom/example/gangrene/Feeder;)I
+</code></p>
+
+<p>What&rsquo;s this <code>Feeder</code> thing?</p>
+
+<p>Let&rsquo;s find all &ldquo;paths&rdquo; for the package name <code>Feeder</code>. This results in us seeing all
+class
+```
+In [8]: show_Paths(analysis[1], analysis[2].tainted_packages.search_packages(&lsquo;Feeder&rsquo;))
+1 Lcom/example/gangrene/Feeder;&ndash;>onCreate()V (0x54) &mdash;&ndash;> Lcom/example/gangrene/Feeder$ServiceHandler;&ndash;><init>(Lcom/example/gangrene/Feeder; Landroid/os/Looper;)V
+1 Lcom/example/gangrene/Feeder;&ndash;>onStartCommand(Landroid/content/Intent; I I)I (0x52) &mdash;&ndash;> Lcom/example/gangrene/Feeder$ServiceHandler;&ndash;>obtainMessage()Landroid/os/Message;
+1 Lcom/example/gangrene/Feeder;&ndash;>onStartCommand(Landroid/content/Intent; I I)I (0x66) &mdash;&ndash;> Lcom/example/gangrene/Feeder$ServiceHandler;&ndash;>sendMessage(Landroid/os/Message;)Z
+1 Lcom/example/gangrene/Feeder$ServiceHandler;&ndash;>handleMessage(Landroid/os/Message;)V (0x2c) &mdash;&ndash;> Lcom/example/gangrene/Feeder;&ndash;>stopSelf(I)V
+1 Lcom/example/gangrene/Feeder$ServiceHandler;&ndash;>handleMessage(Landroid/os/Message;)V (0x6a) &mdash;&ndash;> Lcom/example/gangrene/Feeder;&ndash;>getFilesDir()Ljava/io/File;
+1 Lcom/example/gangrene/Feeder$ServiceHandler;&ndash;>handleMessage(Landroid/os/Message;)V (0xb6) &mdash;&ndash;> Lcom/example/gangrene/Feeder;&ndash;>access$0(Lcom/example/gangrene/Feeder;)I</p>
+
+<p>```</p>
+
+<p>Cool, so Feeder looks like an android
+<a href="http://developer.android.com/reference/android/app/Service.html">Service</a>.
+What happens when it the <code>handleMessage</code> gets called back? Let&rsquo;s decompile the whole apk (using <a href="https://code.google.com/p/androguard/wiki/Decompiler">dad</a>), but focus on the Feeder class the moment:</p>
+
+<p>```
+In [9]: a, d, dx = AnalyzeAPK(&ldquo;apks/test.apk&rdquo;, decompiler=&ldquo;dad&rdquo;)
+In [10]: print d.CLASS_Lcom_example_gangrene_Feeder.get_source()
+package com.example.gangrene;
+public class Feeder extends android.app.Service {</p>
+
+<pre><code>final public java.util.Random randnumber;
+final private long durSec;
+private android.os.Looper mServiceLooper;
+private int bufferLengthBytes;
+private com.example.gangrene.Feeder$ServiceHandler mServiceHandler;
+final private int iterations;
+final public static String DTAG;
+final private int fileSizeBytes;
+
+public android.os.IBinder onBind(android.content.Intent p3)
+{
+    android.util.Log.e("Feeder", "in onBind in Feeder service");
+    return 0;
+}
+
+public void onCreate()
+{
+    super.onCreate();
+    android.util.Log.e("Feeder", "in onCreate in Feeder service");
+    android.widget.Toast.makeText(this, "service created", 0).show();
+    android.os.HandlerThread v0 = new android.os.HandlerThread("ServiceStartArguments", 10);
+    v0.start();
+    this.mServiceLooper = v0.getLooper();
+    this.mServiceHandler = new com.example.gangrene.Feeder$ServiceHandler(this, this.mServiceLooper);
+    return;
+}
+</code></pre>
+
+<p>&hellip;
+```</p>
+
+<p>That&rsquo;s pretty darn readable&hellip; because the APK was not
+<a href="http://developer.android.com/tools/help/proguard.html">obfuscated</a>.</p>
+
+<p>But going back to what was said earlier, we&rsquo;re interested in the <code>handleMessage</code> callback:</p>
+
+<p>```
+In [11]: print d.CLASS_Lcom_example_gangrene_Feeder_ServiceHandler.METHOD_handleMessage.source()
+public void handleMessage(android.os.Message p24)</p>
+
+<pre><code>{
+    int v5 = 0;
+    while(true) {
+        int v4 = (v5 + 1);
+        try {
+            java.io.FileInputStream v14.close();
+            v5 = v4;
+        } catch (java.io.IOException v17) {
+            v5 = v4;
+        }
+    }
+    v5 = v4;
+}
+</code></pre>
+
+<p>```</p>
+
+<p>That&rsquo;s odd, looks like an infinite loop that just closes an input stream (File)
+over and over again&hellip; what a silly app. Looks like the author just wanted to
+troll someone :&ndash;)</p>
+
+<p>Here&rsquo;s what I think they meant to do:</p>
+
+<p>```
+int counter = 0;      <br/>
+while (counter++ &lt; iterations) {</p>
+
+<p>  long endTime = System.currentTimeMillis() + durSec * 1000;
+  FileOutputStream fout = null;
+  FileInputStream rand = null;
+  int bytesRead = 0;
+  long startTime = 0;
+  float deltaTms = 0;</p>
+
+<p>  try {</p>
+
+<pre><code>fout = new FileOutputStream(getFilesDir() + "/test.out");
+rand = new FileInputStream("/dev/urandom");
+byte buffer[] = new byte[bufferLengthBytes];
+
+while (System.currentTimeMillis() &lt; endTime
+    &amp;&amp; bytesRead &lt; fileSizeBytes) {
+  synchronized (this) {
+    try {
+      //Log.d(DTAG, String.format("in job loop %d, bytes: %d", counter, bytesRead));
+      bytesRead += rand.read(buffer);
+      // tic
+      startTime = System.currentTimeMillis();
+      fout.write(buffer);
+      //fout.flush();
+      deltaTms += (System.currentTimeMillis() - startTime);
+      // wait(sleepSec*1000);
+    } catch (IOException e) {
+      Log.d(DTAG, "error reading/writing bytes");
+    } catch (Exception e) {
+      Log.e(DTAG, "other error while in job loop");
+    }
+  }
+
+}
+//toc
+
+
+if (deltaTms &gt; 0) {
+  Log.d(DTAG,
+      String.format(
+        "wrote %d bytes in %f ms; effective write speed %f Mbytes/sec",
+        bytesRead,
+        deltaTms,
+        Float.valueOf(bytesRead / 1024 / 1024
+          / (deltaTms / 1000))));
+}
+</code></pre>
+
+<p>  } catch (FileNotFoundException e1) {</p>
+
+<pre><code>Log.e(DTAG, "file streams could not be created");
+:
+
+  ```
+
+  Conclusion
+  ==========
+
+  More people should use docker to deploy tools to their community. It would make
+  everyone's life easier and less time would be spent dealing with dependencies
+  and more time getting stuff done.
+
+  Happy Hacking!
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Building Efficient Dockerfiles - Node.js]]></title>
