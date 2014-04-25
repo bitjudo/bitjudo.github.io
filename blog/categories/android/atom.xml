@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-04-24T20:47:36-04:00</updated>
+  <updated>2014-04-24T20:49:10-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -190,7 +190,7 @@ In [8]: show_Paths(analysis[1], analysis[2].tainted_packages.search_packages(&ls
 
 <p>Cool, so Feeder looks like an android
 <a href="http://developer.android.com/reference/android/app/Service.html">Service</a>.
-What happens when it the <code>handleMessage</code> gets called back? Let&rsquo;s decompile the whole apk (using <a href="https://code.google.com/p/androguard/wiki/Decompiler">dad</a>), but focus on the Feeder class the moment:</p>
+What happens when the <code>handleMessage</code> gets called back? Let&rsquo;s decompile the whole apk (using <a href="https://code.google.com/p/androguard/wiki/Decompiler">dad</a>), but focus on the Feeder class the moment:</p>
 
 <p>```
 In [9]: a, d, dx = AnalyzeAPK(&ldquo;apks/test.apk&rdquo;, decompiler=&ldquo;dad&rdquo;)
@@ -310,24 +310,18 @@ if (deltaTms &gt; 0) {
         Float.valueOf(bytesRead / 1024 / 1024
           / (deltaTms / 1000))));
 }
+...
 </code></pre>
 
-<p>  } catch (FileNotFoundException e1) {</p>
+<p>```</p>
 
-<pre><code>Log.e(DTAG, "file streams could not be created");
-:
+<h1>Conclusion</h1>
 
-  ```
+<p>More people should use docker to deploy tools to their community. It would make
+everyone&rsquo;s life easier and less time would be spent dealing with dependencies
+and more time getting stuff done.</p>
 
-  Conclusion
-  ==========
-
-  More people should use docker to deploy tools to their community. It would make
-  everyone's life easier and less time would be spent dealing with dependencies
-  and more time getting stuff done.
-
-  Happy Hacking!
-</code></pre>
+<p>Happy Hacking!</p>
 ]]></content>
   </entry>
   

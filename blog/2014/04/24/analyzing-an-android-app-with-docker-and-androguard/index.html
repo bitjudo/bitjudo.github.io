@@ -321,7 +321,7 @@ classes/methods that have the word <code>Feeder</code> in their package path.</p
 
 <p>Cool, so Feeder looks like an android
 <a href="http://developer.android.com/reference/android/app/Service.html">Service</a>.
-What happens when it the <code>handleMessage</code> gets called back? Let&rsquo;s decompile the whole apk (using <a href="https://code.google.com/p/androguard/wiki/Decompiler">dad</a>), but focus on the Feeder class the moment:</p>
+What happens when the <code>handleMessage</code> gets called back? Let&rsquo;s decompile the whole apk (using <a href="https://code.google.com/p/androguard/wiki/Decompiler">dad</a>), but focus on the Feeder class the moment:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -430,73 +430,111 @@ troll someone :&ndash;)</p>
 
 <p>Here&rsquo;s what I think they meant to do:</p>
 
-<p>&#8220;`
-int counter = 0;      <br/>
-while (counter++ &lt; iterations) {</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>int counter = 0;        
+</span><span class='line'>while (counter++ &lt; iterations) {
+</span><span class='line'>
+</span><span class='line'>  long endTime = System.currentTimeMillis() + durSec * 1000;
+</span><span class='line'>  FileOutputStream fout = null;
+</span><span class='line'>  FileInputStream rand = null;
+</span><span class='line'>  int bytesRead = 0;
+</span><span class='line'>  long startTime = 0;
+</span><span class='line'>  float deltaTms = 0;
+</span><span class='line'>
+</span><span class='line'>  try {
+</span><span class='line'>    fout = new FileOutputStream(getFilesDir() + "/test.out");
+</span><span class='line'>    rand = new FileInputStream("/dev/urandom");
+</span><span class='line'>    byte buffer[] = new byte[bufferLengthBytes];
+</span><span class='line'>
+</span><span class='line'>    while (System.currentTimeMillis() &lt; endTime
+</span><span class='line'>        && bytesRead &lt; fileSizeBytes) {
+</span><span class='line'>      synchronized (this) {
+</span><span class='line'>        try {
+</span><span class='line'>          //Log.d(DTAG, String.format("in job loop %d, bytes: %d", counter, bytesRead));
+</span><span class='line'>          bytesRead += rand.read(buffer);
+</span><span class='line'>          // tic
+</span><span class='line'>          startTime = System.currentTimeMillis();
+</span><span class='line'>          fout.write(buffer);
+</span><span class='line'>          //fout.flush();
+</span><span class='line'>          deltaTms += (System.currentTimeMillis() - startTime);
+</span><span class='line'>          // wait(sleepSec*1000);
+</span><span class='line'>        } catch (IOException e) {
+</span><span class='line'>          Log.d(DTAG, "error reading/writing bytes");
+</span><span class='line'>        } catch (Exception e) {
+</span><span class='line'>          Log.e(DTAG, "other error while in job loop");
+</span><span class='line'>        }
+</span><span class='line'>      }
+</span><span class='line'>
+</span><span class='line'>    }
+</span><span class='line'>    //toc
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    if (deltaTms &gt; 0) {
+</span><span class='line'>      Log.d(DTAG,
+</span><span class='line'>          String.format(
+</span><span class='line'>            "wrote %d bytes in %f ms; effective write speed %f Mbytes/sec",
+</span><span class='line'>            bytesRead,
+</span><span class='line'>            deltaTms,
+</span><span class='line'>            Float.valueOf(bytesRead / 1024 / 1024
+</span><span class='line'>              / (deltaTms / 1000))));
+</span><span class='line'>    }
+</span><span class='line'>    ...</span></code></pre></td></tr></table></div></figure>
 
-<p>  long endTime = System.currentTimeMillis() + durSec * 1000;
-  FileOutputStream fout = null;
-  FileInputStream rand = null;
-  int bytesRead = 0;
-  long startTime = 0;
-  float deltaTms = 0;</p>
 
-<p>  try {</p>
+<h1>Conclusion</h1>
 
-<pre><code>fout = new FileOutputStream(getFilesDir() + "/test.out");
-rand = new FileInputStream("/dev/urandom");
-byte buffer[] = new byte[bufferLengthBytes];
+<p>More people should use docker to deploy tools to their community. It would make
+everyone&rsquo;s life easier and less time would be spent dealing with dependencies
+and more time getting stuff done.</p>
 
-while (System.currentTimeMillis() &lt; endTime
-    &amp;&amp; bytesRead &lt; fileSizeBytes) {
-  synchronized (this) {
-    try {
-      //Log.d(DTAG, String.format("in job loop %d, bytes: %d", counter, bytesRead));
-      bytesRead += rand.read(buffer);
-      // tic
-      startTime = System.currentTimeMillis();
-      fout.write(buffer);
-      //fout.flush();
-      deltaTms += (System.currentTimeMillis() - startTime);
-      // wait(sleepSec*1000);
-    } catch (IOException e) {
-      Log.d(DTAG, "error reading/writing bytes");
-    } catch (Exception e) {
-      Log.e(DTAG, "other error while in job loop");
-    }
-  }
-
-}
-//toc
-
-
-if (deltaTms &gt; 0) {
-  Log.d(DTAG,
-      String.format(
-        "wrote %d bytes in %f ms; effective write speed %f Mbytes/sec",
-        bytesRead,
-        deltaTms,
-        Float.valueOf(bytesRead / 1024 / 1024
-          / (deltaTms / 1000))));
-}
-</code></pre>
-
-<p>  } catch (FileNotFoundException e1) {</p>
-
-<pre><code>Log.e(DTAG, "file streams could not be created");
-:
-
-  ```
-
-  Conclusion
-  ==========
-
-  More people should use docker to deploy tools to their community. It would make
-  everyone's life easier and less time would be spent dealing with dependencies
-  and more time getting stuff done.
-
-  Happy Hacking!
-</code></pre>
+<p>Happy Hacking!</p>
 </div>
 
 
