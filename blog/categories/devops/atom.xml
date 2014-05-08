@@ -4,7 +4,7 @@
   <title><![CDATA[Category: devops | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/devops/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-04-24T21:00:39-04:00</updated>
+  <updated>2014-05-07T21:59:12-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Docker Scripts - Updated]]></title>
+    <link href="http://bitjudo.com/blog/2014/05/07/docker-scripts-updated/"/>
+    <updated>2014-05-07T21:35:28-04:00</updated>
+    <id>http://bitjudo.com/blog/2014/05/07/docker-scripts-updated</id>
+    <content type="html"><![CDATA[<p>In a follow up to the original post <a href="">Docker Scripts</a>, Docker has made it so that you no longer need to have <code>jq</code> installed, you can do everything with the <code>docker</code> client&rsquo;s inspect command and its (semi)new format feature.</p>
+
+<p>I&rsquo;ve updated the scripts to use the format command.</p>
+
+<!-- more -->
+
+
+<h2>Update Scripts</h2>
+
+<h3>docker-get-ip</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Usage: docker-get-ip <span class="o">(</span>name or sha<span class="o">)</span>&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span> -n &amp;ldquo;<span class="nv">$1</span>&amp;rdquo; <span class="o">]</span> &amp;amp;&amp;amp; docker inspect &amp;mdash;format &amp;ldquo;<span class="o">}}</span>&amp;rdquo; <span class="nv">$1</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>docker-get-id</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-get-id </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Usage: docker-get-id <span class="o">(</span>friendly-name<span class="o">)</span>&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span> -n &amp;ldquo;<span class="nv">$1</span>&amp;rdquo; <span class="o">]</span> &amp;amp;&amp;amp; docker inspect &amp;mdash;format &amp;ldquo;<span class="o">}}</span>&amp;rdquo; <span class="nv">$1</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>docker-get-image</h3>
+
+<p>I find this one useful for DevOps uses, when I have the friendly name, I can compare the current running container&rsquo;s image with the one I expect it to have (like an update) and redeploy.
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-get-image </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Usage: docker-get-image <span class="o">(</span>friendly-name<span class="o">)</span>&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span> -n &amp;ldquo;<span class="nv">$1</span>&amp;rdquo; <span class="o">]</span> &amp;amp;&amp;amp; docker inspect &amp;mdash;format &amp;ldquo;<span class="o">}}</span>&amp;rdquo; <span class="nv">$1</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>docker-get-state</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-get-state </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Usage: docker-get-state <span class="o">(</span>friendly-name<span class="o">)</span>&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">[</span> -n &amp;ldquo;<span class="nv">$1</span>&amp;rdquo; <span class="o">]</span> &amp;amp;&amp;amp; docker inspect &amp;mdash;format &amp;ldquo;<span class="o">}}</span>&amp;rdquo; <span class="nv">$1</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Conclusion</h2>
+
+<p>These are just easy shortcuts, I&rsquo;m sure you can write these in different ways or as aliases. Perhaps others will find this useful.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Just in Time Encryption Keys using SaltStack]]></title>

@@ -1,0 +1,233 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Docker Scripts - Updated - bitJudo</title>
+	<meta name="author" content="a couple of geeks">
+
+	
+	<meta name="description" content="In a follow up to the original post Docker Scripts, Docker has made it so that you no longer need to have jq installed, you can do everything with &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="bitJudo" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script async="true" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">bitJudo</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:bitjudo.com">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/bitjudo" title="Twitter">Twitter</a>
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+    
+	</div>
+	<form class="search" action="https://www.google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:bitjudo.com">
+	</form>
+</nav>
+
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Docker Scripts - Updated</h2>
+	<div class="entry-content"><p>In a follow up to the original post <a href="">Docker Scripts</a>, Docker has made it so that you no longer need to have <code>jq</code> installed, you can do everything with the <code>docker</code> client&rsquo;s inspect command and its (semi)new format feature.</p>
+
+<p>I&rsquo;ve updated the scripts to use the format command.</p>
+
+<!-- more -->
+
+
+<h2>Update Scripts</h2>
+
+<h3>docker-get-ip</h3>
+
+<figure class='code'><figcaption><span>docker-get-ip </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-ip (name or sha)</span>
+</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect --format <span class="s2">&quot;{{ .NetworkSettings.IPAddress }}&quot;</span> <span class="nv">$1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>docker-get-id</h3>
+
+<figure class='code'><figcaption><span>docker-get-id </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-id (friendly-name)</span>
+</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect --format <span class="s2">&quot;{{ .ID }}&quot;</span> <span class="nv">$1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>docker-get-image</h3>
+
+<p>I find this one useful for DevOps uses, when I have the friendly name, I can compare the current running container&rsquo;s image with the one I expect it to have (like an update) and redeploy.</p>
+
+<figure class='code'><figcaption><span>docker-get-image </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-image (friendly-name)</span>
+</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect --format <span class="s2">&quot;{{ .Image }}&quot;</span> <span class="nv">$1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>docker-get-state</h3>
+
+<figure class='code'><figcaption><span>docker-get-state </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Usage: docker-get-state (friendly-name)</span>
+</span><span class='line'><span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> docker inspect --format <span class="s2">&quot;{{ .State.Running }}&quot;</span> <span class="nv">$1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>These are just easy shortcuts, I&rsquo;m sure you can write these in different ways or as aliases. Perhaps others will find this useful.</p>
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-07T21:35:28-04:00" pubdate data-updated="true">May 7<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/docker/'>docker</a>, <a class='category' href='/blog/categories/scripts/'>scripts</a>
+
+</div>
+  <div class="author">
+  
+
+<span class="byline author vcard">Posted by <span class="fn">a couple of geeks</span></span>
+</div>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2014
+
+    a couple of geeks
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'bitjudo';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://bitjudo.com/blog/2014/05/07/docker-scripts-updated/';
+        var disqus_url = 'http://bitjudo.com/blog/2014/05/07/docker-scripts-updated/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//go.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-48897339-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>

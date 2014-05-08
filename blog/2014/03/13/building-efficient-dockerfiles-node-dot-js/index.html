@@ -195,9 +195,7 @@ RUN apt-get -y install nodejs
 WORKDIR /opt/app
 
 ADD . /opt/app
-
 RUN npm install
-
 EXPOSE 3001
 
 CMD [&quot;node&quot;, &quot;server.js&quot;]</code></pre></noscript></div>
