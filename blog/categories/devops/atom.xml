@@ -4,7 +4,7 @@
   <title><![CDATA[Category: devops | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/devops/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-05-13T21:12:19-04:00</updated>
+  <updated>2014-05-13T21:16:49-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -12,6 +12,328 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Partial Continuous Deployment with Docker and SaltStack]]></title>
+    <link href="http://bitjudo.com/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/"/>
+    <updated>2014-05-13T21:10:57-04:00</updated>
+    <id>http://bitjudo.com/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack</id>
+    <content type="html"><![CDATA[<p>If you haven&rsquo;t figured out by now, I&rsquo;m a big fan of both <a href="http://www.docker.io">Docker</a> and <a href="http://www.saltstack.com">SaltStack</a>. I&rsquo;ve been using them both separately for a while now, but recently started using them together. Here&rsquo;s my first iteration of continuous deployment using Docker and SaltStack.</p>
+
+<p>This article will show you how to use <code>SaltStack</code> to re-deploy a container when a new version becomes available. I&rsquo;ve made a few assumptions: (1) you know what Docker and SaltStack are, (2) you understand what a SaltStack State is, and (3) that you will use a docker index/registry to pull in your docker images (check out my <a href="https://github.com/ekristen/docker-index">docker-index</a> project).</p>
+
+<p>This post will break down the state file to explain each step, so even if you are not a Salt guru it should generally make sense. I won&rsquo;t cover building docker images or how to trigger SaltStack to run the state file. (That might come in a future article.)</p>
+
+<!-- more -->
+
+
+<h1>The Salt State</h1>
+
+<p>What makes this all possible is a crafting a SaltStack state to run certain commands when certain conditions apply. For example you can have the state stop a running container if a new version of an image is available, but if the image hasn&rsquo;t changed then do nothing.</p>
+
+<p>For the rest of this article we&rsquo;ll be using <a href="https://github.com/ekristen/docker-index">docker index</a> (just an application I wrote) as the example application to deploy.</p>
+
+<p>If you want to skip the explanation and just grab the whole state file, jump down the page a bit.</p>
+
+<h2>The State Explained</h2>
+
+<h3>Step 1 &ndash; Always Pull the Most Recent Image</h3>
+
+<p>First we want to make sure to <strong>ALWAYS</strong> pull the latest image. We use different tags based on the environment, <code>:dev</code> for dev, <code>:qa</code> for quality assurance, <code>:prod</code> for production. This allows taggging specific versions for release to different environments, but also allows us to tag an application as its version number plus the environment it goes to. By making the state always perform a pull we make sure that the latest image pushed to the registry is pulled down and ready.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-index.sls </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">docker_index_image</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">docker.pulled:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">index.docker.io/ekristen/docker-index:dev</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">force</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">True</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">100</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Step 2 &mdash; Stop If New Image Available</h3>
+
+<p>Next, we check and see if the latest version is running. We want the state to be idempotent if possible.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-index.sls </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">docker_index_stop_if_old</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">cmd.run:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker stop docker_index</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">unless</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker inspect --format &quot;{{ .Image }}&quot; docker_index | grep $(docker images | grep &quot;index.docker.io/ekristen/docker-index:dev&quot; | awk &#39;{ print $3 }&#39;)</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">require</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index_image</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">111</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The <code>unless</code> basically looks at the list of available images and grabs the unique hash of <code>index.docker.io/ekristen/docker-index:dev</code> and then greps the <code>.Image</code> value from the <code>inspect</code> command of the current running container named <code>docker-index</code>. This works because in <strong>Step 1</strong> we made sure we pulled down the latest version of the <code>dev</code> tag.</p>
+
+<h3>Step 3 &ndash; Remove If We Stopped</h3>
+
+<p>If we stopped the container in <strong>Step 2</strong> then we want to also remove the container so that we can re-deploy it in <strong>Step 3</strong> and start it in <strong>Step 4</strong>.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-index.sls </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">docker_index_remove_if_old</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">cmd.run:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker rm docker_index</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">unless</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker inspect --format &quot;{{ .Image }}&quot; docker_index | grep $(docker images | grep &quot;index.docker.io/ekristen/docker-index:dev&quot; | awk &#39;{ print $3 }&#39;)</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">require</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">cmd</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index_stop_if_old</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">112</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The <code>unless</code> does the same as in <strong>Step 2</strong> and checks to ensure the existing container is using a different image then the latest one.</p>
+
+<h3>Step 4 &ndash; Create the Container</h3>
+
+<p>Now that we have successfully stopped and removed the old container, we can install the new container, and start it up (<strong>Step 5</strong>)</p>
+
+<p>This part of the state defines the container and installs it but does not start it.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-index.sls </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">docker_index_container</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">docker.installed:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">image</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">index.docker.io/ekristen/docker-index:dev</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">environment</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;REDIS_HOST&quot;</span><span class="p-Indicator">:</span> <span class="s">&quot;192.168.1.100&quot;</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;REDIS_PORT&quot;</span><span class="p-Indicator">:</span> <span class="s">&quot;6379&quot;</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;PORT&quot;</span><span class="p-Indicator">:</span> <span class="s">&quot;5100&quot;</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ports</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;5100/tcp&quot;</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">require</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index_image</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">120</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Step 5 &ndash; Start the Container</h3>
+
+<p>We are almost done. Finally we want to make sure the container is running.</p>
+
+<p><strong>Note:</strong> Unfortunately the documentation on the docker states is still pretty rough. Pay close attention when you are defining port bindings, they must be double indented to work properly!</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-index.sls </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">docker_index_running</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">docker.running:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- container</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">port_bindings</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="s">&quot;5001/tcp&quot;</span><span class="p-Indicator">:</span>
+</span><span class='line'>        <span class="l-Scalar-Plain">HostIp</span><span class="p-Indicator">:</span> <span class="s">&quot;0.0.0.0&quot;</span>
+</span><span class='line'>        <span class="l-Scalar-Plain">HostPort</span><span class="p-Indicator">:</span> <span class="s">&quot;5100&quot;</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">require</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index_container</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">121</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>The Whole State</h2>
+
+<p>Here is the state file in its entirety.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>docker-index.sls </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">docker_index_image</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">docker.pulled:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">index.docker.io/ekristen/docker-index:dev</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">force</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">True</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">100</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;docker_index_stop_if_old</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">cmd.run:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker stop docker_index</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">unless</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker inspect --format &quot;{{ .Image }}&quot; docker_index | grep $(docker images | grep &quot;index.docker.io/ekristen/docker-index:dev&quot; | awk &#39;{ print $3 }&#39;)</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">require</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index_image</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">111</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;docker_index_remove_if_old</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">cmd.run:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker rm docker_index</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">unless</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker inspect --format &quot;{{ .Image }}&quot; docker_index | grep $(docker images | grep &quot;index.docker.io/ekristen/docker-index:dev&quot; | awk &#39;{ print $3 }&#39;)</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">require</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">cmd</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index_stop_if_old</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">112</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;docker_index_container</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">docker.installed:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">image</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">index.docker.io/ekristen/docker-index:dev</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">environment</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;REDIS_HOST&quot;</span><span class="p-Indicator">:</span> <span class="s">&quot;192.168.1.100&quot;</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;REDIS_PORT&quot;</span><span class="p-Indicator">:</span> <span class="s">&quot;6379&quot;</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;PORT&quot;</span><span class="p-Indicator">:</span> <span class="s">&quot;5100&quot;</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ports</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;5100/tcp&quot;</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">require</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index_image</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">120</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;docker_index_running</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">docker.running:&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;pre&gt;&lt;code&gt;- container</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">port_bindings</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="s">&quot;5001/tcp&quot;</span><span class="p-Indicator">:</span>
+</span><span class='line'>        <span class="l-Scalar-Plain">HostIp</span><span class="p-Indicator">:</span> <span class="s">&quot;0.0.0.0&quot;</span>
+</span><span class='line'>        <span class="l-Scalar-Plain">HostPort</span><span class="p-Indicator">:</span> <span class="s">&quot;5100&quot;</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">require</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_index_container</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">order</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">121</span>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>Conclusion</h1>
+
+<p>This solution works fairly well for my purpose. Docker is fast, and I plan to use this in a rolling restart configuration in production. The fact that it first stops the running container, removes it and then starts the new one isn&rsquo;t a big deal for me. In my other environments, a few second hiccup is perfectly acceptable while the old is removed and the new is started.</p>
+
+<p>I also have a few other tricks with Docker that I hope to be writing about soon, so please check back, and let me know what you thought about this article.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Docker Scripts - Updated]]></title>

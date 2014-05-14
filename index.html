@@ -7,7 +7,7 @@
 	<meta name="author" content="a couple of geeks">
 
 	
-	<meta name="description" content=" May 7th, 2014 Posted by a couple of geeks ">
+	<meta name="description" content="If you haven&rsquo;t figured out by now, I&rsquo;m a big fan of both Docker and SaltStack. I&rsquo;ve been using them both separately for a while &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -81,15 +81,20 @@
     <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/2014/05/07/docker-index-revisited-with-new-features/">
+		<a href="/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/">
 		
-			Docker Index Revisited With New Features</a>
+			Partial Continuous Deployment With Docker and SaltStack</a>
 	</h2>
 	<div class="entry-content">
-		
+		<p>If you haven&rsquo;t figured out by now, I&rsquo;m a big fan of both <a href="http://www.docker.io">Docker</a> and <a href="http://www.saltstack.com">SaltStack</a>. I&rsquo;ve been using them both separately for a while now, but recently started using them together. Here&rsquo;s my first iteration of continuous deployment using Docker and SaltStack.</p>
+
+<p>This article will show you how to use <code>SaltStack</code> to re-deploy a container when a new version becomes available. I&rsquo;ve made a few assumptions: (1) you know what Docker and SaltStack are, (2) you understand what a SaltStack State is, and (3) that you will use a docker index/registry to pull in your docker images (check out my <a href="https://github.com/ekristen/docker-index">docker-index</a> project).</p>
+
+<p>This post will break down the state file to explain each step, so even if you are not a Salt guru it should generally make sense. I won&rsquo;t cover building docker images or how to trigger SaltStack to run the state file. (That might come in a future article.)</p>
+
 
 		
-		
+		<a href="/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/" class="more-link">Read on &rarr;</a>
 	</div>
 
 
@@ -106,13 +111,17 @@
   
 
 
-<time datetime="2014-05-07T22:13:30-04:00" pubdate data-updated="true">May 7<span>th</span>, 2014</time></div>
+<time datetime="2014-05-13T21:10:57-04:00" pubdate data-updated="true">May 13<span>th</span>, 2014</time></div>
 	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/docker/'>docker</a>, <a class='category' href='/blog/categories/saltstack/'>saltstack</a>
+
 </div>
   <div class="author">
   
 
-<span class="byline author vcard">Posted by <span class="fn">a couple of geeks</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Erik Kristensen</span></span>
 </div>
 	
 </div>

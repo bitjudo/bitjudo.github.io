@@ -29,16 +29,18 @@
         <lastmod>2014-05-13T19:54:46-04:00</lastmod>
     </url>
     <url>
-        <loc>http://bitjudo.com/blog/2014/05/07/docker-index-revisited-with-new-features/</loc>
-        <lastmod>2014-05-07T22:13:30-04:00</lastmod>
+        <loc>
+            http://bitjudo.com/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/
+        </loc>
+        <lastmod>2014-05-13T21:14:53-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/blog/archives/</loc>
-        <lastmod>2014-05-13T19:54:46-04:00</lastmod>
+        <lastmod>2014-05-13T21:14:53-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/</loc>
-        <lastmod>2014-05-13T19:54:46-04:00</lastmod>
+        <lastmod>2014-05-13T21:14:53-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/robots.txt</loc>
