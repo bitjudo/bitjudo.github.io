@@ -3,7 +3,7 @@ layout: post
 title: "Partial Continuous Deployment with Docker and SaltStack"
 date: 2014-05-13 21:10:57 -0400
 comments: true
-published: false
+published: true
 author: Erik Kristensen
 categories: saltstack docker devops
 ---
