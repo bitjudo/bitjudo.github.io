@@ -3,6 +3,7 @@ layout: post
 title: "Docker Scripts - Updated"
 date: 2014-05-07 21:35:28 -0400
 published: true
+author: Erik Kristensen
 comments: true
 categories: docker devops scripts
 ---
