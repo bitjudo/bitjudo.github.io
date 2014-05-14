@@ -8,16 +8,16 @@ author: Erik Kristensen
 categories: saltstack docker devops
 ---
 
-If you haven't figured out by now, I'm a big fan of both [Docker](http://www.docker.io) and [SaltStack](http://www.saltstack.com). I have been using them both separately for a while now, but recently started using them together, and from this use I've come up with my first iteration of my continuous deployment using Docker and SaltStack.
+If you haven't figured out by now, I'm a big fan of both [Docker](http://www.docker.io) and [SaltStack](http://www.saltstack.com). I've been using them both separately for a while now, but recently started using them together. Here's my first iteration of continuous deployment using Docker and SaltStack.
 
-Hopefully this article will show you how you can `SaltStack` to re-deploy a container when a new version is available. I've made a few assumptions. First, you know what Docker and SaltStack is. Second, you understand what a SaltStack State is, and finally that you will use a docker index/registry to pull your images from. I try to break down the state file to explain each step, so even if you are not a Salt guru, it generally should make sense. I am also not going to cover the building of the docker images or the triggering of SaltStack to run the state file. (That might come in a future article.)
+This article will show you how to use `SaltStack` to re-deploy a container when a new version becomes available. I've made a few assumptions: (1) you know what Docker and SaltStack is, (2) you understand what a SaltStack State is, and (3) that you will use a docker index/registry to pull your images from. I'll break down the state file to explain each step, so even if you are not a Salt guru, it generally should make sense. I am also not going to cover the building of the docker images or the triggering of SaltStack to run the state file. (That might come in a future article.)
 
 <!-- more -->
 
 # The Salt State
-What makes this all possible is a crafting a SaltStack state to run certain commands when certain conditions apply, thus you can have the state stop a running container if a new version of an image is available, but if the image hasn't changed then do nothing.
+What makes this all possible is a crafting a SaltStack state to run certain commands when certain conditions apply. For example you can have the state stop a running container if a new version of an image is available, but if the image hasn't changed then do nothing.
 
-For the rest of this article I am going to be using my [docker index](https://github.com/ekristen/docker-index) application I wrote as the example application to deploy. For more information on my app you can visit it's website at https://github.com/ekristen/docker-index. 
+For the rest of this article I am going to be using [docker index](https://github.com/ekristen/docker-index) application I wrote as the example application to deploy. For more information on my app you can visit it's website at https://github.com/ekristen/docker-index.
 
 If you want to skip the explanation and just grab the whole state file, jump down the page a bit.
 
@@ -41,7 +41,7 @@ Next, lets check and see if the latest version is running. We want the state to 
 docker_index_stop_if_old:
   cmd.run:
     - name: docker stop docker_index
-    - unless: docker inspect --format "{{ "{{ .Image "}}}}" docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
+    - unless: docker inspect --format {{ '"{{ .Image }}"' }} docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
     - require:
       - docker: docker_index_image
     - order: 111
@@ -56,7 +56,7 @@ If we stopped in **Step 2** then we want to also remove the container so that we
 docker_index_remove_if_old:
   cmd.run:
     - name: docker rm docker_index
-    - unless: docker inspect --format "{{ "{{ .Image "}}}}" docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
+    - unless: docker inspect --format {{ '"{{ .Image }}"' }} docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
     - require:
       - cmd: docker_index_stop_if_old
     - order: 112
@@ -117,7 +117,7 @@ docker_index_image:
 docker_index_stop_if_old:
   cmd.run:
     - name: docker stop docker_index
-    - unless: docker inspect --format "{{ "{{ .Image "}}}}" docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
+    - unless: docker inspect --format {{ '"{{ .Image }}"' }} docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
     - require:
       - docker: docker_index_image
     - order: 111
@@ -125,7 +125,7 @@ docker_index_stop_if_old:
 docker_index_remove_if_old:
   cmd.run:
     - name: docker rm docker_index
-    - unless: docker inspect --format "{{ "{{ .Image "}}}}" docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
+    - unless: docker inspect --format {{ '"{{ .Image }}"' }} docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
     - require:
       - cmd: docker_index_stop_if_old
     - order: 112
