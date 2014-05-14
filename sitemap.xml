@@ -2,42 +2,46 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://bitjudo.com/blog/2014/03/11/docker-scripts/</loc>
-        <lastmod>2014-03-29T20:23:25-04:00</lastmod>
+        <lastmod>2014-05-07T22:01:04-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/blog/2014/03/12/authentication-for-a-docker-registry/</loc>
-        <lastmod>2014-03-29T20:23:25-04:00</lastmod>
+        <lastmod>2014-05-07T22:01:04-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/</loc>
-        <lastmod>2014-05-07T21:18:38-04:00</lastmod>
+        <lastmod>2014-05-07T22:01:04-04:00</lastmod>
     </url>
     <url>
         <loc>
             http://bitjudo.com/blog/2014/03/19/just-in-time-encryption-keys-using-saltstack/
         </loc>
-        <lastmod>2014-03-29T20:23:26-04:00</lastmod>
+        <lastmod>2014-05-07T22:01:04-04:00</lastmod>
     </url>
     <url>
         <loc>
             http://bitjudo.com/blog/2014/04/24/analyzing-an-android-app-with-docker-and-androguard/
         </loc>
-        <lastmod>2014-05-07T21:18:38-04:00</lastmod>
+        <lastmod>2014-05-07T22:01:04-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/blog/2014/05/07/docker-scripts-updated/</loc>
-        <lastmod>2014-05-07T21:56:53-04:00</lastmod>
+        <lastmod>2014-05-13T19:54:46-04:00</lastmod>
+    </url>
+    <url>
+        <loc>http://bitjudo.com/blog/2014/05/07/docker-index-revisited-with-new-features/</loc>
+        <lastmod>2014-05-07T22:13:30-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/blog/archives/</loc>
-        <lastmod>2014-05-07T21:56:53-04:00</lastmod>
+        <lastmod>2014-05-13T19:54:46-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/</loc>
-        <lastmod>2014-05-07T21:56:53-04:00</lastmod>
+        <lastmod>2014-05-13T19:54:46-04:00</lastmod>
     </url>
     <url>
         <loc>http://bitjudo.com/robots.txt</loc>
-        <lastmod>2014-03-29T20:23:26-04:00</lastmod>
+        <lastmod>2014-05-07T22:01:05-04:00</lastmod>
     </url>
 </urlset>
