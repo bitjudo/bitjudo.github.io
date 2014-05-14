@@ -41,7 +41,7 @@ Next, lets check and see if the latest version is running. We want the state to 
 docker_index_stop_if_old:
   cmd.run:
     - name: docker stop docker_index
-    - unless: docker inspect --format {{ '"{{ .Image }}"' }} docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ "{{ .Image "}}}}" docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
     - require:
       - docker: docker_index_image
     - order: 111
@@ -56,7 +56,7 @@ If we stopped in **Step 2** then we want to also remove the container so that we
 docker_index_remove_if_old:
   cmd.run:
     - name: docker rm docker_index
-    - unless: docker inspect --format {{ '"{{ .Image }}"' }} docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ "{{ .Image "}}}}" docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
     - require:
       - cmd: docker_index_stop_if_old
     - order: 112
@@ -117,7 +117,7 @@ docker_index_image:
 docker_index_stop_if_old:
   cmd.run:
     - name: docker stop docker_index
-    - unless: docker inspect --format {{ '"{{ .Image }}"' }} docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ "{{ .Image "}}}}" docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
     - require:
       - docker: docker_index_image
     - order: 111
@@ -125,7 +125,7 @@ docker_index_stop_if_old:
 docker_index_remove_if_old:
   cmd.run:
     - name: docker rm docker_index
-    - unless: docker inspect --format {{ '"{{ .Image }}"' }} docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ "{{ .Image "}}}}" docker_index | grep $(docker images | grep "index.docker.io/ekristen/docker-index:dev" | awk '{ print $3 }')
     - require:
       - cmd: docker_index_stop_if_old
     - order: 112
