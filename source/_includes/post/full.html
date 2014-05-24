@@ -1,4 +1,4 @@
-<article class="blog-post">
+<article class="post blog-post">
     <header>
         <h1>{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}</h1>
         <div class="lead-image">
@@ -22,9 +22,3 @@
         {{ content }}
     </div>
 </article>
-
-{% if site.disqus_short_name and site.disqus_show_comment_count == true %}
-<div class="comments" id="comments">
-    <a href="{{ root_url }}{% if index %}{{ post.url }}{% endif %}#disqus_thread">Comments</a>
-</div>
-{% endif %}

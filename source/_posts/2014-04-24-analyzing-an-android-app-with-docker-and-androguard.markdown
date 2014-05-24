@@ -8,8 +8,7 @@ author: David Weinstein
 categories: docker androguard android analysis vulnerabilities
 ---
 
-TL;DR
-=====
+## TL;DR
 
 Have you wanted to get into analyzing Android apps--for vulnerabilities,
 malware, or just for fun? Maybe you've experienced problems getting an
@@ -20,14 +19,14 @@ find some vulnerabilities while you're at it.
 
 <!-- more -->
 
-Dependencies
-============
+## Dependencies
+
 I assume you have a working docker setup. If you aren't sure how to set it up
 on your platform, try following one of these
 [guides](http://docs.docker.io/installation/). 
 
-Download the repo
-=================
+## Download the repo
+
 First check out the code from
 [github](https://github.com/dweinstein/dockerfile-androguard) by running `git
 clone git@github.com:dweinstein/dockerfile-androguard.git` or `git clone
@@ -40,8 +39,8 @@ to know how to do it all manually, you can
 [see](https://code.google.com/p/androguard/wiki/Installation) for yourself.
 
 
-Build
-=====
+## Build
+
 After cloning the repository, `cd` into the directory and you should see something like this:
 
 ```
@@ -51,8 +50,8 @@ Dockerfile     Makefile       README.md      data-container
 
 You can build by doing a `make build`
 
-Run
-===
+## Run
+
 Once built, you have all you need to start analyzing your first app. I even put
 an app in the repository for you to have something to play with right away! Just do a `make run`
 and you should get something like this:
@@ -301,8 +300,7 @@ while (counter++ < iterations) {
     ...
 ```
 
-Conclusion
-==========
+## Conclusion
 
 More people should use docker to deploy tools to their community. It would make
 everyone's life easier and less time would be spent dealing with dependencies
