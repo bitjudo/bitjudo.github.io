@@ -1,0 +1,19 @@
+{% if post.author %}
+  {% assign author = post.author %}
+{% elsif page.author %}
+  {% assign author = page.author %}
+{% else %}
+  {% assign author = site.author %}
+{% endif %}
+<article class="blog-teaser">
+    <header>
+        <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+        <span class="meta">{% include post/date.html %}{{ time }}, {% include post/author.html %}</span>
+        <div class="meta">
+            Categories: {% include post/categories.html %}
+        </div>
+    </header>
+    <div class="clearfix">
+        &nbsp;
+    </div>
+</article>

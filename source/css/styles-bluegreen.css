@@ -663,7 +663,7 @@ hr {
 .blog-post header .lead-image .meta {
   padding-left: 30px;
   padding-bottom: 10px;
-  position: absolute;
+  /*position: absolute;*/
   bottom: 15px;
   background-color: #55a773;
   background-color: rgba(85, 167, 115, 0.85);

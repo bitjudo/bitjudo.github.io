@@ -3,6 +3,7 @@ layout: post
 title: "Analyzing an Android app with Docker and Androguard"
 date: 2014-04-24 19:48:05 -0400
 comments: true
+favorite: true
 author: David Weinstein
 categories: docker androguard android analysis vulnerabilities
 ---

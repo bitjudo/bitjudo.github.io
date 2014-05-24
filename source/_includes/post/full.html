@@ -1,0 +1,30 @@
+<article class="blog-post">
+    <header>
+        <h1>{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}</h1>
+        <div class="lead-image">
+            <div class="meta clearfix">
+                <div class="author">
+                    <i class="fa fa-user"></i>
+                    <span class="data">{% include post/author.html %}</span>
+                </div>
+                <div class="date">
+                    <i class="fa fa-calendar"></i>
+                    <span class="data">{% include post/date.html %}{{ time }}</span>
+                </div>
+                <div class="comments">
+                    <i class="fa fa-comments"></i>
+                    <span class="data"><a href="#comments">26 Comments</a></span>
+                </div>                                
+            </div>
+        </div>
+    </header>
+    <div class="body">
+        {{ content }}
+    </div>
+</article>
+
+{% if site.disqus_short_name and site.disqus_show_comment_count == true %}
+<div class="comments" id="comments">
+    <a href="{{ root_url }}{% if index %}{{ post.url }}{% endif %}#disqus_thread">Comments</a>
+</div>
+{% endif %}

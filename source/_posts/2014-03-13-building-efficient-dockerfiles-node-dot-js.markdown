@@ -3,6 +3,7 @@ layout: post
 title: "Building Efficient Dockerfiles - Node.js"
 date: 2014-03-13 09:34:02 -0400
 comments: true
+favorite: true
 author: David Weinstein
 categories: docker nodejs dockerfiles
 ---
