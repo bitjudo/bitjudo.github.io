@@ -1,6 +1,8 @@
 <div class="widewrapper masthead">
     <div class="container">
-        <a href="{{ root_url }}/" id="logo">{{ site.title }}</a>
+        <a href="{{ root_url }}/" id="logo" title="{{ site.title }}">
+            <img src="{{ root_url }}/images/logo.png" alt="{{ site.title }}" />
+        </a>
 
         <div id="mobile-nav-toggle" class="pull-right">
             <a href="#" data-toggle="collapse" data-target=".tales-nav .navbar-collapse">
@@ -23,7 +25,7 @@
                 <button class="searchbutton" type="submit">
                     <i class="fa fa-search"></i>
                 </button>
-				<input type="text" name="q" results="0" placeholder="Search">
+				<input type="text" name="q" results="0" placeholder="Search" class="searchfield" id="searchbox">
 				<input type="hidden" name="q" value="site:{{ site.url | shorthand_url }}">
             </form>
         </div>

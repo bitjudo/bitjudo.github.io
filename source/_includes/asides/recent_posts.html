@@ -1,10 +1,14 @@
-<section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    {% for post in site.posts limit: site.recent_posts %}
-      <li class="post">
-        <a href="{{ root_url }}{{ post.url }}">{% if site.titlecase %}{{ post.title | titlecase }}{% else %}{{ post.title }}{% endif %}</a>
-      </li>
-    {% endfor %}
-  </ul>
-</section>
+<div class="aside-widget">
+    <header>
+        <h3>Recent Posts</h3>
+    </header>
+    <div class="body">
+        <ul class="tales-list">
+        {% for post in site.posts limit: site.recent_posts %}
+            <li class="post">
+                <a href="{{ root_url }}{{ post.url }}">{% if site.titlecase %}{{ post.title | titlecase }}{% else %}{{ post.title }}{% endif %}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
