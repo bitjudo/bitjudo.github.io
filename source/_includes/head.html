@@ -7,34 +7,27 @@
     <meta charset="utf-8">
     <title>{% if page.title %}{{ page.title | strip_html }} - {% endif %}{{ site.title }}</title>
   	<meta name="author" content="{{ site.author }}" />
-
   	{% capture description %}{% if page.description %}{{ page.description }}{% else %}{{ content | raw_content }}{% endif %}{% endcapture %}
   	<meta name="description" content="{{ description | strip_html | condense_spaces | truncate:150 }}" />
   	{% if page.keywords %}<meta name="keywords" content="{{ page.keywords }}">{% endif %}
   	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-
   	<link href="{{ site.subscribe_rss }}" rel="alternate" title="{{site.title}}" type="application/atom+xml" />
   	<link rel="canonical" href="{{ canonical }}" />
   	<link href="{{ root_url }}/favicon.ico" rel="shortcut icon" />
   	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    
+
     <!-- Bootstrap styles -->
     <link rel="stylesheet" href="{{ root_url }}/css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="{{ root_url }}/css/bootstrap/bootstrap-theme.min.css" />
-
     <!-- Font-Awesome -->
     <link rel="stylesheet" href="{{ root_url }}/css/font-awesome/font-awesome.min.css" />
-
     <!-- Google Webfonts -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css' />
-
     <!-- Styles -->
     <link rel="stylesheet" href="{{ root_url }}/css/styles-bluegreen.css" id="theme-styles" />
     <link rel="stylesheet" href="{{ root_url }}/css/styles.css" />
-
     <!--[if lt IE 9]>      
         <script src="{{ root_url }}/javascripts/google/html5-3.6-respond-1.1.0.min.js"></script>
     <![endif]-->
-
     <script>window.jQuery || document.write('<script src="{{ root_url }}/javascripts/jquery/jquery-1.11.0.min.js"><\/script>')</script>
 </head>
