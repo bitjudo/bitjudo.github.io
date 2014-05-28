@@ -4,7 +4,7 @@
   <title><![CDATA[Category: luks | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/luks/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-05-13T21:16:49-04:00</updated>
+  <updated>2014-05-25T20:18:49-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -24,14 +24,14 @@
 
 <p>The rest of this article is a TL;DR combined with a tutorial of sorts to help you set this up.</p>
 
-<h1>TL;DR</h1>
+<h2>TL;DR</h2>
 
 <p>By taking advantage of a couple features that <a href="http://www.saltstack.com/">SaltStack</a> brings to the table, it is possible to automate the mounting of your LUKS volumes after the server has started. The salt minion has the ability to run certain states (scripts) upon start.  This allows the user to run a LUKS state that will verify the existence of the volume, unlock it, and mount it. Using salt states also allows the user to build state dependencies, or trigger other states to run.  These features ensure that any services requiring the encrypted volume only start after the volume is available.</p>
 
 <!-- more -->
 
 
-<h1>How it Works</h1>
+<h2>How it Works</h2>
 
 <p>Upon initializing of SaltStack, the configuration tells the Salt minion to run two scripts.  One script is the LUKS encryption script, which confirms that the LUKS volume exists, then unlocks and mounts it.  When the LUKS script runs, it requests pillar data from the Salt master.  Included in the requested data is the LUKS encryption key, which is transferred using zeromq and AES encryption. The key is temporarily stored locally on the minion while the script runs, and is deleted upon completion.</p>
 
@@ -39,11 +39,11 @@
 
 <p>Ultimately, we end up with the ability to mount an encrypted drive and start dependent services.  However, we have relegated the encryption key to a single separate server and only temporarily transfer it to the servers that need it, exactly when they need it.  In simpler terms, we’ve created a just-in-time delivery mechanism for an encryption key.  While this method may not be bulletproof, I have found it preferable to storing the encryption key permanently on the same server as the paired encrypted drive.</p>
 
-<h1>The Quasi How-To</h1>
+<h2>The Quasi How-To</h2>
 
 <p>The below does not cover setup and/or configuring SaltStack, LVM or LUKS encryption.  Rather, it’s an example of salt state and pillar files, some steps you can use to get going. It should be pretty straightforward.</p>
 
-<h2>The Salt State</h2>
+<h3>The Salt State</h3>
 
 <p>I originally found this state and after a little bit of searching I cannot find the original place I found it, but I ended up modifying it a bit for my needs. If you know where it originally came from, let me know and I’ll make a note. The state ensures that the LVM I need is setup and then sets up the LUKS volume. If all that is already setup then the script will simply unlock and mount the LUKS volume at the the defined mount point.</p>
 
@@ -116,11 +116,11 @@ enc_volume_mount:
 
 <p><strong>Caveat:</strong> This script will initialize a single drive as part of an LVM, with some tweaking it could combine multiple drives. This script was design to bring a server up from scratch and have a LUKS volume mounted and ready to go.</p>
 
-<h3>Extra Credit</h3>
+<h4>Extra Credit</h4>
 
 <p>If you want to learn how to make states reliant on each other check out the <code>requires</code> directive in the salt documentation. If you want to notify states when another state is done running check out <code>require_in</code>.</p>
 
-<h2>The Salt Pillar</h2>
+<h3>The Salt Pillar</h3>
 
 <p>The pillar contains the configuration for the LVM and LUKS volumes and the mount point. Ensuring that you populate this pillar with the appropriate data is important.</p>
 
@@ -142,13 +142,13 @@ enc_volume_mount:
 
 <p><strong>Note:</strong> I don&rsquo;t discuss how to do it, but you can duplicate this pillar and change the <strong>password</strong> for each server if you want.</p>
 
-<h2>Putting it all together</h2>
+<h3>Putting it all together</h3>
 
 <p>Assuming you&rsquo;ve associated the salt state and pillar to the appropriate target you&rsquo;ll be able to use <code>highstate</code> or <code>state.sls</code> to setup your LUKS encrypted drive. To make sure this happens each time the server starts up make sure you edit the minion&rsquo;s configuration and setup <code>startup_states</code> to <em>highstate</em>.</p>
 
 <p>You should be able to tell the minion to run the LUKS state and find your drive mounted. Once that happens do a quick reboot, you should also find a few seconds to a minute after reboot your drive is mounted and accessible.</p>
 
-<h1>Conclusion</h1>
+<h2>Conclusion</h2>
 
 <p>I&rsquo;m pretty happy with this solution, it allows my servers to be rebooted without human interaction and for the critical services to come online once their data is available. It keeps the encryption key from having to be stored on the server. Using this strategy you could easily expand this for other encryption technologies.</p>
 

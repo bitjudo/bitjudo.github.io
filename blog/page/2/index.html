@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <title>bitJudo</title>
+  	<meta name="author" content="a couple of geeks" />
+
+  	
+  	<meta name="description" content="Building Efficient Dockerfiles - Node.js Mar 13th, 2014, Posted by David Weinstein TL;DR Use the following code snippet (or a variation) after all &hellip;" />
+  	
+  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+  	<link href="/atom.xml" rel="alternate" title="bitJudo" type="application/atom+xml" />
+  	<link rel="canonical" href="" />
+  	<link href="/favicon.ico" rel="shortcut icon" />
+  	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="/css/vendor/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/vendor/bootstrap/bootstrap-theme.min.css" />
+
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" href="/css/vendor/font-awesome/font-awesome.min.css" />
+
+    <!-- Google Webfonts -->
+    <!-- ><link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css' /> -->
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/styles-bluegreen.css" id="theme-styles" />
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <!--[if lt IE 9]>      
+        <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js"></script>
+    <![endif]-->
+
+    <script>window.jQuery || document.write('<script src="/javascripts/vendor/jquery/jquery-1.11.0.min.js"><\/script>')</script>
+</head>
+
+<body>
+	<header id="header"><div class="widewrapper masthead">
+    <div class="container">
+        <a href="/" id="logo" title="bitJudo">
+            <img src="/images/logo.png" alt="bitJudo" />
+        </a>
+
+        <div id="mobile-nav-toggle" class="pull-right">
+            <a href="#" data-toggle="collapse" data-target=".tales-nav .navbar-collapse">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div>
+
+        <nav class="pull-right tales-nav">
+    <div class="collapse navbar-collapse">
+        <ul class="nav nav-pills navbar-nav">
+            <li><a href="/">Blog</a></li>
+            <li><a href="/blog/archives">Archives</a></li>
+        </ul>
+    </div>
+</nav> 
+    </div>
+</div>
+
+<div class="widewrapper subheader">
+    <div class="container">
+        <div class="tales-breadcrumb">
+            <a href="">bitJudo</a>
+        </div>
+
+        <div class="tales-searchbox">
+            <form action="https://www.google.com/search" method="get" accept-charset="utf-8">
+                <button class="searchbutton" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+				<input type="text" name="q" results="0" placeholder="Search" class="searchfield" id="searchbox">
+				<input type="hidden" name="q" value="site:bitjudo.com">
+            </form>
+        </div>
+    </div>
+</div>
+</header>
+	<div id="content"><div class="widewrapper main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 blog-main">
+                
+
+
+    
+    
+  
+
+<article class="blog-teaser">
+    <header>
+        <h3><a href="/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/">Building Efficient Dockerfiles - Node.js</a></h3>
+        <span class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-13T09:34:02-04:00" pubdate data-updated="true">Mar 13<span>th</span>, 2014</time>, 
+  
+
+<span class="byline author vcard">Posted by <span class="fn">David Weinstein</span></span>
+</span>
+        <hr>
+    </header>
+    <div class="body">
+        <h1>TL;DR</h1>
+
+<p>Use the following code snippet (or a variation) after all your app dependencies
+but before you ADD your app code to the container&hellip; this way you don&rsquo;t rebuild
+your modules each time you re-build your container. If your <code>package.json</code> file
+changes then your modules will be rebuilt. See this
+<a href="https://gist.github.com/dweinstein/9550188">gist</a> for a full example.</p>
+
+<figure class='code'><figcaption><span>Add this to your Dockerfile, after your deps, but before your app code.</span><a href='https://gist.github.com/dweinstein/9468644'>gist </a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>ADD package.json /tmp/package.json
+</span><span class='line'>RUN cd /tmp &amp;&amp; npm install
+</span><span class='line'>RUN mkdir -p /opt/app &amp;&amp; cp -a /tmp/node_modules /opt/app/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Using cached layers for modules</h1>
+
+<p>This article is about making efficient use of docker layers. As a side effect
+we&rsquo;ll see how to reduce development and debugging time for Node.js applications
+hosted in Docker containers. As you migrate from developing everything on your
+development host system to Docker, there are some growing pains&hellip; mainly
+arround interactive modify-and-test workflows.</p>
+
+
+    </div>
+    <div class="clearfix">
+        <a href="/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/" class="btn btn-tales-one">Read more</a>
+    </div>
+</article>
+
+
+
+
+
+    
+    
+  
+
+<article class="blog-teaser">
+    <header>
+        <h3><a href="/blog/2014/03/12/authentication-for-a-docker-registry/">Authentication for a Docker Registry</a></h3>
+        <span class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-12T10:48:18-04:00" pubdate data-updated="true">Mar 12<span>th</span>, 2014</time>, 
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Erik Kristensen</span></span>
+</span>
+        <hr>
+    </header>
+    <div class="body">
+        <p>Docker is an amazing tool that has only been around for a short while, but has taken the DevOps world by storm, and organizations from small to large are starting to use it from integration testing, to dynamically scaling an application&rsquo;s environment.</p>
+
+<p>Docker released an open-source registry that allows you to remote store images you create with docker, but what the did not release is an open-source index. The index is arguably (depending on your use case) the most important part, it handles the authentication layer of a registry. A registry can be used without and index, and if you are just wanting a place to store your images and you don&rsquo;t want to worry about who can access them, then no need to read on.</p>
+
+
+    </div>
+    <div class="clearfix">
+        <a href="/blog/2014/03/12/authentication-for-a-docker-registry/" class="btn btn-tales-one">Read more</a>
+    </div>
+</article>
+
+
+
+
+
+    
+    
+  
+
+<article class="blog-teaser">
+    <header>
+        <h3><a href="/blog/2014/03/11/docker-scripts/">Docker Scripts</a></h3>
+        <span class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-11T19:37:06-04:00" pubdate data-updated="true">Mar 11<span>th</span>, 2014</time>, 
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Erik Kristensen</span></span>
+</span>
+        <hr>
+    </header>
+    <div class="body">
+        <p>David (the other author on this blog) and I have been doing a lot of work with docker with respect to our daily jobs. We ended up needed to orchestrate the management of multiple docker containers. This was before we discovered projects like <a href="https://github.com/toscanini/maestro">maestro</a> and <a href="https://github.com/signalfuse/maestro-ng">maetro-ng</a>. David found an awesome command line for parsing json called <a href="http://stedolan.github.io/jq/">jq</a> and put it to use by creating a bash one liner to grab a container&rsquo;s IP address.</p>
+
+
+    </div>
+    <div class="clearfix">
+        <a href="/blog/2014/03/11/docker-scripts/" class="btn btn-tales-one">Read more</a>
+    </div>
+</article>
+
+
+
+
+<div class="paging">
+    
+    
+    
+    <a href="/" class="newer">Newer <i class="fa fa-long-arrow-right"></i> </a>
+    
+</div>
+
+            </div>
+            <aside class="col-md-4 blog-aside">
+
+                <div class="aside-widget">
+    <header>
+        <h3>Recent Posts</h3>
+    </header>
+    <div class="body">
+        <ul class="tales-list">
+        
+            <li class="post">
+                <a href="/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/">Partial Continuous Deployment With Docker and SaltStack</a>
+            </li>
+        
+            <li class="post">
+                <a href="/blog/2014/05/07/docker-scripts-updated/">Docker Scripts - Updated</a>
+            </li>
+        
+            <li class="post">
+                <a href="/blog/2014/04/24/analyzing-an-android-app-with-docker-and-androguard/">Analyzing an Android App With Docker and Androguard</a>
+            </li>
+        
+            <li class="post">
+                <a href="/blog/2014/03/19/just-in-time-encryption-keys-using-saltstack/">Just in Time Encryption Keys Using SaltStack</a>
+            </li>
+        
+            <li class="post">
+                <a href="/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/">Building Efficient Dockerfiles - Node.js</a>
+            </li>
+        
+        </ul>
+    </div>
+</div>
+            
+                <div class="aside-widget">
+    <header>
+        <h3>Our Favorites</h3>
+    </header>
+    <div class="body">
+        <ul class="tales-list">
+        
+        
+            <li><a href="/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/">Partial Continuous Deployment with Docker and SaltStack</a></li>
+        
+        
+        
+        
+        
+            <li><a href="/blog/2014/04/24/analyzing-an-android-app-with-docker-and-androguard/">Analyzing an Android app with Docker and Androguard</a></li>
+        
+        
+        
+        
+        
+            <li><a href="/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/">Building Efficient Dockerfiles - Node.js</a></li>
+        
+        
+        
+        
+        
+        
+        </ul>
+    </div>
+</div>
+
+                <div class="aside-widget">
+    <header>
+        <h3>Categories</h3>
+    </header>
+    <div class="body clearfix">
+        <ul class="tags">
+        
+            <li><a href="/blog/categories/devops">devops</a></li>
+        
+            <li><a href="/blog/categories/docker">docker</a></li>
+        
+            <li><a href="/blog/categories/scripts">scripts</a></li>
+        
+            <li><a href="/blog/categories/dockerfiles">dockerfiles</a></li>
+        
+            <li><a href="/blog/categories/nodejs">nodejs</a></li>
+        
+            <li><a href="/blog/categories/encryption">encryption</a></li>
+        
+            <li><a href="/blog/categories/longread">longread</a></li>
+        
+            <li><a href="/blog/categories/luks">luks</a></li>
+        
+            <li><a href="/blog/categories/saltstack">saltstack</a></li>
+        
+            <li><a href="/blog/categories/tutorial">tutorial</a></li>
+        
+            <li><a href="/blog/categories/analysis">analysis</a></li>
+        
+            <li><a href="/blog/categories/androguard">androguard</a></li>
+        
+            <li><a href="/blog/categories/android">android</a></li>
+        
+            <li><a href="/blog/categories/vulnerabilities">vulnerabilities</a></li>
+        
+        </ul>
+    </div>
+</div>
+            </aside>
+        </div>
+    </div>
+</div></div>
+	<footer id="footer"><div class="widewrapper footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 footer-widget">
+                <h3> <i class="fa fa-cog"></i>Statistics</h3>
+
+                <span>Because everyone loves statistics!</span>
+
+                <div class="stats">
+                    <div class="line">
+                        <span class="counter">7</span>
+                        <span class="caption">Articles</span>
+                    </div>
+                    <!--
+                    <div class="line">
+                        <span class="counter">???</span>
+                        <span class="caption">Comments</span>
+                    </div>
+                    -->
+                    <div class="line">
+                        <span class="counter">2</span>
+                        <span class="caption">Authors</span>
+                    </div>                    
+                </div>
+            </div>
+
+            <div class="col-md-4 footer-widget">
+                <h3> <i class="fa fa-star"></i> Hall of Fame</h3>
+                <ul class="tales-list">
+                    <li><a href="index.html">Why we Need to Encrypt All Communication</a></li>
+                    <li><a href="#">Selling is a Function of Design. Not Vice-Versa.</a></li>
+                    <li><a href="#">It’s Hard To Come Up With Dummy Titles</a></li>
+                    <li><a href="#">Why the Internet is Full of Cats</a></li>
+                    <li><a href="#">Last Made-Up Headline, I Swear!</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 footer-widget">
+                <h3> <i class="fa fa-envelope"></i>Contact Us</h3>
+
+                <span>We'd love to hear from you. Thoughts, feedback, critique - all welcome! Drop us a line:</span>
+                
+                <span class="email">We are on Twitter! <a href="http://twitter.com/bitjudo">@bitjudo</a></span>
+
+                <span class="email"><a href="#">david@bitjudo.com</a>, PGP key 0x06374760</span>
+                <span class="email"><a href="#">erik@bitjudo.com</a>, PGP key 0xA1EBD5CC</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="widewrapper copyright">
+    <div class="container">
+        Copyright &copy; 2014
+    </div>
+</div></footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/vendor/bootstrap/bootstrap.min.js"></script>
+<script src="/javascripts/vendor/modernizr/modernizr.js"></script>
+
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'bitjudo';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//go.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-48897339-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+</body>
+</html>

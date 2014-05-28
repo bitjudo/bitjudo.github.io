@@ -4,7 +4,7 @@
   <title><![CDATA[Category: androguard | bitJudo]]></title>
   <link href="http://bitjudo.com/blog/categories/androguard/atom.xml" rel="self"/>
   <link href="http://bitjudo.com/"/>
-  <updated>2014-05-13T21:16:49-04:00</updated>
+  <updated>2014-05-25T20:18:49-04:00</updated>
   <id>http://bitjudo.com/</id>
   <author>
     <name><![CDATA[a couple of geeks]]></name>
@@ -18,7 +18,7 @@
     <link href="http://bitjudo.com/blog/2014/04/24/analyzing-an-android-app-with-docker-and-androguard/"/>
     <updated>2014-04-24T19:48:05-04:00</updated>
     <id>http://bitjudo.com/blog/2014/04/24/analyzing-an-android-app-with-docker-and-androguard</id>
-    <content type="html"><![CDATA[<h1>TL;DR</h1>
+    <content type="html"><![CDATA[<h2>TL;DR</h2>
 
 <p>Have you wanted to get into analyzing Android apps&mdash;for vulnerabilities,
 malware, or just for fun? Maybe you&rsquo;ve experienced problems getting an
@@ -30,13 +30,13 @@ find some vulnerabilities while you&rsquo;re at it.</p>
 <!-- more -->
 
 
-<h1>Dependencies</h1>
+<h2>Dependencies</h2>
 
 <p>I assume you have a working docker setup. If you aren&rsquo;t sure how to set it up
 on your platform, try following one of these
 <a href="http://docs.docker.io/installation/">guides</a>.</p>
 
-<h1>Download the repo</h1>
+<h2>Download the repo</h2>
 
 <p>First check out the code from
 <a href="https://github.com/dweinstein/dockerfile-androguard">github</a> by running <code>git
@@ -49,7 +49,7 @@ need if you were going to install the
 to know how to do it all manually, you can
 <a href="https://code.google.com/p/androguard/wiki/Installation">see</a> for yourself.</p>
 
-<h1>Build</h1>
+<h2>Build</h2>
 
 <p>After cloning the repository, <code>cd</code> into the directory and you should see something like this:</p>
 
@@ -60,7 +60,7 @@ Dockerfile     Makefile       README.md      data-container
 
 <p>You can build by doing a <code>make build</code></p>
 
-<h1>Run</h1>
+<h2>Run</h2>
 
 <p>Once built, you have all you need to start analyzing your first app. I even put
 an app in the repository for you to have something to play with right away! Just do a <code>make run</code>
@@ -318,7 +318,7 @@ if (deltaTms &gt; 0) {
 
 <p>```</p>
 
-<h1>Conclusion</h1>
+<h2>Conclusion</h2>
 
 <p>More people should use docker to deploy tools to their community. It would make
 everyone&rsquo;s life easier and less time would be spent dealing with dependencies

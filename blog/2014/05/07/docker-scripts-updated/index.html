@@ -1,83 +1,127 @@
 
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
-	<meta charset="utf-8">
-	<title>Docker Scripts - Updated - bitJudo</title>
-	<meta name="author" content="a couple of geeks">
+    <meta charset="utf-8">
+    <title>Docker Scripts - Updated - bitJudo</title>
+  	<meta name="author" content="a couple of geeks" />
 
-	
-	<meta name="description" content="In a follow up to the original post Docker Scripts, Docker has made it so that you no longer need to have jq installed, you can do everything with &hellip;">
-	
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  	
+  	<meta name="description" content="Docker Scripts - Updated Posted by Erik Kristensen May 7th, 2014 In a follow up to the original post Docker Scripts, Docker has made it so that you &hellip;" />
+  	
+  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-	<link href="/atom.xml" rel="alternate" title="bitJudo" type="application/atom+xml">
-	<link rel="canonical" href="">
-	<link href="/favicon.png" rel="shortcut icon">
-	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<script async="true" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	
+  	<link href="/atom.xml" rel="alternate" title="bitJudo" type="application/atom+xml" />
+  	<link rel="canonical" href="" />
+  	<link href="/favicon.ico" rel="shortcut icon" />
+  	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="/css/vendor/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/vendor/bootstrap/bootstrap-theme.min.css" />
+
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" href="/css/vendor/font-awesome/font-awesome.min.css" />
+
+    <!-- Google Webfonts -->
+    <!-- ><link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css' /> -->
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/styles-bluegreen.css" id="theme-styles" />
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <!--[if lt IE 9]>      
+        <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js"></script>
+    <![endif]-->
+
+    <script>window.jQuery || document.write('<script src="/javascripts/vendor/jquery/jquery-1.11.0.min.js"><\/script>')</script>
 </head>
 
-
 <body>
-	<header id="header" class="inner"><h1><a href="/">bitJudo</a></h1>
-<nav id="main-nav"><ul class="main">
-	<li><a href="/">Blog</a></li>
-	<li><a href="/blog/archives">Archives</a></li>
-</ul>
-</nav>
-<nav id="mobile-nav">
-	<div class="alignleft menu">
-		<a class="button">Menu</a>
-		<div class="container"><ul class="main">
-	<li><a href="/">Blog</a></li>
-	<li><a href="/blog/archives">Archives</a></li>
-</ul>
-</div>
-	</div>
-	<div class="alignright search">
-		<a class="button"></a>
-		<div class="container">
-			<form action="https://www.google.com/search" method="get">
-				<input type="text" name="q" results="0">
-				<input type="hidden" name="q" value="site:bitjudo.com">
-			</form>
-		</div>
-	</div>
-</nav>
-<nav id="sub-nav" class="alignright">
-	<div class="social">
-		
-		
-		
-		<a class="twitter" href="http://twitter.com/bitjudo" title="Twitter">Twitter</a>
-		
-		
-    
-		
-		
-		
-		
-		
-		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-		
-    
-	</div>
-	<form class="search" action="https://www.google.com/search" method="get">
-		<input class="alignright" type="text" name="q" results="0">
-		<input type="hidden" name="q" value="site:bitjudo.com">
-	</form>
-</nav>
+	<header id="header"><div class="widewrapper masthead">
+    <div class="container">
+        <a href="/" id="logo" title="bitJudo">
+            <img src="/images/logo.png" alt="bitJudo" />
+        </a>
 
+        <div id="mobile-nav-toggle" class="pull-right">
+            <a href="#" data-toggle="collapse" data-target=".tales-nav .navbar-collapse">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div>
+
+        <nav class="pull-right tales-nav">
+    <div class="collapse navbar-collapse">
+        <ul class="nav nav-pills navbar-nav">
+            <li><a href="/">Blog</a></li>
+            <li><a href="/blog/archives">Archives</a></li>
+        </ul>
+    </div>
+</nav> 
+    </div>
+</div>
+
+<div class="widewrapper subheader">
+    <div class="container">
+        <div class="tales-breadcrumb">
+            <a href="">bitJudo</a>
+        </div>
+
+        <div class="tales-searchbox">
+            <form action="https://www.google.com/search" method="get" accept-charset="utf-8">
+                <button class="searchbutton" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+				<input type="text" name="q" results="0" placeholder="Search" class="searchfield" id="searchbox">
+				<input type="hidden" name="q" value="site:bitjudo.com">
+            </form>
+        </div>
+    </div>
+</div>
 </header>
-	
-		
-	
-	<div id="content" class="inner"><article class="post">
-	<h2 class="title">Docker Scripts - Updated</h2>
-	<div class="entry-content"><p>In a follow up to the original post <a href="">Docker Scripts</a>, Docker has made it so that you no longer need to have <code>jq</code> installed, you can do everything with the <code>docker</code> client&rsquo;s inspect command and its (semi)new format feature.</p>
+	<div id="content"><div class="widewrapper main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 blog-main">
+                
+
+
+    <article class="post blog-post">
+    <header>
+        <h1>Docker Scripts - Updated</h1>
+        <div class="meta clearfix">
+            <div class="author">
+                <i class="fa fa-user"></i>
+                <span class="data">
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Erik Kristensen</span></span>
+</span>
+            </div>
+            <div class="date">
+                <i class="fa fa-calendar"></i>
+                <span class="data">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-07T21:35:28-04:00" pubdate data-updated="true">May 7<span>th</span>, 2014</time></span>
+            </div>
+        </div>
+    </header>
+    <div class="body">
+        <p>In a follow up to the original post <a href="">Docker Scripts</a>, Docker has made it so that you no longer need to have <code>jq</code> installed, you can do everything with the <code>docker</code> client&rsquo;s inspect command and its (semi)new format feature.</p>
 
 <p>I&rsquo;ve updated the scripts to use the format command.</p>
 
@@ -131,37 +175,11 @@
 <h2>Conclusion</h2>
 
 <p>These are just easy shortcuts, I&rsquo;m sure you can write these in different ways or as aliases. Perhaps others will find this useful.</p>
-</div>
 
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-07T21:35:28-04:00" pubdate data-updated="true">May 7<span>th</span>, 2014</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/docker/'>docker</a>, <a class='category' href='/blog/categories/scripts/'>scripts</a>
-
-</div>
-  <div class="author">
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Erik Kristensen</span></span>
-</div>
-	
-</div>
+    </div>
 </article>
+
+
 
 	<div class="share">
 	<div class="addthis_toolbox addthis_default_style ">
@@ -182,19 +200,173 @@
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
 </section>
+
+            </div>
+            <aside class="col-md-4 blog-aside">
+
+                <div class="aside-widget">
+    <header>
+        <h3>Recent Posts</h3>
+    </header>
+    <div class="body">
+        <ul class="tales-list">
+        
+            <li class="post">
+                <a href="/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/">Partial Continuous Deployment With Docker and SaltStack</a>
+            </li>
+        
+            <li class="post">
+                <a href="/blog/2014/05/07/docker-scripts-updated/">Docker Scripts - Updated</a>
+            </li>
+        
+            <li class="post">
+                <a href="/blog/2014/04/24/analyzing-an-android-app-with-docker-and-androguard/">Analyzing an Android App With Docker and Androguard</a>
+            </li>
+        
+            <li class="post">
+                <a href="/blog/2014/03/19/just-in-time-encryption-keys-using-saltstack/">Just in Time Encryption Keys Using SaltStack</a>
+            </li>
+        
+            <li class="post">
+                <a href="/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/">Building Efficient Dockerfiles - Node.js</a>
+            </li>
+        
+        </ul>
+    </div>
 </div>
-	<footer id="footer" class="inner">Copyright &copy; 2014
+            
+                <div class="aside-widget">
+    <header>
+        <h3>Our Favorites</h3>
+    </header>
+    <div class="body">
+        <ul class="tales-list">
+        
+        
+            <li><a href="/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/">Partial Continuous Deployment with Docker and SaltStack</a></li>
+        
+        
+        
+        
+        
+            <li><a href="/blog/2014/04/24/analyzing-an-android-app-with-docker-and-androguard/">Analyzing an Android app with Docker and Androguard</a></li>
+        
+        
+        
+        
+        
+            <li><a href="/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/">Building Efficient Dockerfiles - Node.js</a></li>
+        
+        
+        
+        
+        
+        
+        </ul>
+    </div>
+</div>
 
-    a couple of geeks
+                <div class="aside-widget">
+    <header>
+        <h3>Categories</h3>
+    </header>
+    <div class="body clearfix">
+        <ul class="tags">
+        
+            <li><a href="/blog/categories/devops">devops</a></li>
+        
+            <li><a href="/blog/categories/docker">docker</a></li>
+        
+            <li><a href="/blog/categories/scripts">scripts</a></li>
+        
+            <li><a href="/blog/categories/dockerfiles">dockerfiles</a></li>
+        
+            <li><a href="/blog/categories/nodejs">nodejs</a></li>
+        
+            <li><a href="/blog/categories/encryption">encryption</a></li>
+        
+            <li><a href="/blog/categories/longread">longread</a></li>
+        
+            <li><a href="/blog/categories/luks">luks</a></li>
+        
+            <li><a href="/blog/categories/saltstack">saltstack</a></li>
+        
+            <li><a href="/blog/categories/tutorial">tutorial</a></li>
+        
+            <li><a href="/blog/categories/analysis">analysis</a></li>
+        
+            <li><a href="/blog/categories/androguard">androguard</a></li>
+        
+            <li><a href="/blog/categories/android">android</a></li>
+        
+            <li><a href="/blog/categories/vulnerabilities">vulnerabilities</a></li>
+        
+        </ul>
+    </div>
+</div>
+            </aside>
+        </div>
+    </div>
+</div></div>
+	<footer id="footer"><div class="widewrapper footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 footer-widget">
+                <h3> <i class="fa fa-cog"></i>Statistics</h3>
 
-</footer>
+                <span>Because everyone loves statistics!</span>
+
+                <div class="stats">
+                    <div class="line">
+                        <span class="counter">7</span>
+                        <span class="caption">Articles</span>
+                    </div>
+                    <!--
+                    <div class="line">
+                        <span class="counter">???</span>
+                        <span class="caption">Comments</span>
+                    </div>
+                    -->
+                    <div class="line">
+                        <span class="counter">2</span>
+                        <span class="caption">Authors</span>
+                    </div>                    
+                </div>
+            </div>
+
+            <div class="col-md-4 footer-widget">
+                <h3> <i class="fa fa-star"></i> Hall of Fame</h3>
+                <ul class="tales-list">
+                    <li><a href="index.html">Why we Need to Encrypt All Communication</a></li>
+                    <li><a href="#">Selling is a Function of Design. Not Vice-Versa.</a></li>
+                    <li><a href="#">It’s Hard To Come Up With Dummy Titles</a></li>
+                    <li><a href="#">Why the Internet is Full of Cats</a></li>
+                    <li><a href="#">Last Made-Up Headline, I Swear!</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 footer-widget">
+                <h3> <i class="fa fa-envelope"></i>Contact Us</h3>
+
+                <span>We'd love to hear from you. Thoughts, feedback, critique - all welcome! Drop us a line:</span>
+                
+                <span class="email">We are on Twitter! <a href="http://twitter.com/bitjudo">@bitjudo</a></span>
+
+                <span class="email"><a href="#">david@bitjudo.com</a>, PGP key 0x06374760</span>
+                <span class="email"><a href="#">erik@bitjudo.com</a>, PGP key 0xA1EBD5CC</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="widewrapper copyright">
+    <div class="container">
+        Copyright &copy; 2014
+    </div>
+</div></footer>
 	<script src="/javascripts/slash.js"></script>
-<script src="/javascripts/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-(function($){
-	$('.fancybox').fancybox();
-})(jQuery);
-</script> <!-- Delete or comment this line to disable Fancybox -->
+<script src="/javascripts/vendor/bootstrap/bootstrap.min.js"></script>
+<script src="/javascripts/vendor/modernizr/modernizr.js"></script>
+
 
 
 <script type="text/javascript">
@@ -226,7 +398,6 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
 	</script>
-
 
 
 </body>
