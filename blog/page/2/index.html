@@ -9,7 +9,7 @@
     <title>bitJudo</title>
   	<meta name="author" content="a couple of geeks" />
   	
-  	<meta name="description" content="Building Efficient Dockerfiles - Node.js Mar 13th, 2014, Posted by David Weinstein TL;DR Use the following code snippet (or a variation) after all &hellip;" />
+  	<meta name="description" content="Just in Time Encryption Keys using SaltStack Mar 19th, 2014, Posted by Erik Kristensen Recently, I was challenged with ensuring the encryption of &hellip;" />
   	
   	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   	<link href="/atom.xml" rel="alternate" title="bitJudo" type="application/atom+xml" />
@@ -80,6 +80,54 @@
         <div class="row">
             <div class="col-md-8 blog-main">
                 
+
+
+    
+    
+  
+
+<article class="blog-teaser">
+    <header>
+        <h3><a href="/blog/2014/03/19/just-in-time-encryption-keys-using-saltstack/">Just in Time Encryption Keys using SaltStack</a></h3>
+        <span class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-19T11:15:00-04:00" pubdate data-updated="true">Mar 19<span>th</span>, 2014</time>, 
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Erik Kristensen</span></span>
+</span>
+        <hr>
+    </header>
+    <div class="body">
+        <p>Recently, I was challenged with ensuring the encryption of all data at rest for several servers.  Unlike laptops or desktops, server nodes need to be able to come up and down in response to various requests. When spinning up multiple nodes you definitely don’t want them waiting for human interaction. Enter SaltStack and LUKS volumes. The real challenge was how to provide full disk encryption without storing the encryption key itself on the server.</p>
+
+<p>Since these were Linux servers, LUKS encryption made the most sense. In essence what this tutorial describes is a way to provide “just in time” delivery of disk encryption keys. This is done using SaltStack features.</p>
+
+<p>The rest of this article is a TL;DR combined with a tutorial of sorts to help you set this up.</p>
+
+<h2>TL;DR</h2>
+
+<p>By taking advantage of a couple features that <a href="http://www.saltstack.com/">SaltStack</a> brings to the table, it is possible to automate the mounting of your LUKS volumes after the server has started. The salt minion has the ability to run certain states (scripts) upon start.  This allows the user to run a LUKS state that will verify the existence of the volume, unlock it, and mount it. Using salt states also allows the user to build state dependencies, or trigger other states to run.  These features ensure that any services requiring the encrypted volume only start after the volume is available.</p>
+
+
+    </div>
+    <div class="clearfix">
+        <a href="/blog/2014/03/19/just-in-time-encryption-keys-using-saltstack/" class="btn btn-tales-one">Read more</a>
+    </div>
+</article>
+
+
+
 
 
     
@@ -245,6 +293,10 @@ arround interactive modify-and-test workflows.</p>
         <ul class="tales-list">
         
             <li class="post">
+                <a href="/blog/2014/06/09/encrypting-aws-instance-storage/">Encrypting AWS Instance Storage</a>
+            </li>
+        
+            <li class="post">
                 <a href="/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/">Partial Continuous Deployment With Docker and SaltStack</a>
             </li>
         
@@ -260,10 +312,6 @@ arround interactive modify-and-test workflows.</p>
                 <a href="/blog/2014/03/19/just-in-time-encryption-keys-using-saltstack/">Just in Time Encryption Keys Using SaltStack</a>
             </li>
         
-            <li class="post">
-                <a href="/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/">Building Efficient Dockerfiles - Node.js</a>
-            </li>
-        
         </ul>
     </div>
 </div>
@@ -274,6 +322,8 @@ arround interactive modify-and-test workflows.</p>
     </header>
     <div class="body">
         <ul class="tales-list">
+        
+        
         
         
             <li><a href="/blog/2014/05/13/partial-continuous-deployment-with-docker-and-saltstack/">Partial Continuous Deployment with Docker and SaltStack</a></li>
@@ -334,6 +384,12 @@ arround interactive modify-and-test workflows.</p>
         
             <li><a href="/blog/categories/vulnerabilities">vulnerabilities</a></li>
         
+            <li><a href="/blog/categories/aws">aws</a></li>
+        
+            <li><a href="/blog/categories/ec2">ec2</a></li>
+        
+            <li><a href="/blog/categories/storage">storage</a></li>
+        
         </ul>
     </div>
 </div>
@@ -351,7 +407,7 @@ arround interactive modify-and-test workflows.</p>
 
                 <div class="stats">
                     <div class="line">
-                        <span class="counter">7</span>
+                        <span class="counter">8</span>
                         <span class="caption">Articles</span>
                     </div>
                     <!--

@@ -6,10 +6,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
-    <title>Category: tutorial - bitJudo</title>
+    <title>Encrypting AWS Instance Storage - bitJudo</title>
   	<meta name="author" content="a couple of geeks" />
   	
-  	<meta name="description" content="Category: tutorial" />
+  	<meta name="description" content="Encrypting AWS Instance Storage Posted by Erik Kristensen Jun 9th, 2014 Encrypted Data at Rest is the big term that has been floating around for &hellip;" />
   	
   	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   	<link href="/atom.xml" rel="alternate" title="bitJudo" type="application/atom+xml" />
@@ -80,54 +80,167 @@
         <div class="row">
             <div class="col-md-8 blog-main">
                 
-	
 
 
-	
-	
-	<section class="archives"><h1 class="year">2014</h1>
-
-
-  
-
-<article class="post blog-teaser">
+    <article class="post blog-post">
     <header>
-        <h3><a href="/blog/2014/03/19/just-in-time-encryption-keys-using-saltstack/">Just in Time Encryption Keys using SaltStack</a></h3>
-        <span class="meta">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-19T11:15:00-04:00" pubdate data-updated="true">Mar 19<span>th</span>, 2014</time>, 
+        <h1>Encrypting AWS Instance Storage</h1>
+        <div class="meta clearfix">
+            <div class="author">
+                <i class="fa fa-user"></i>
+                <span class="data">
   
 
 <span class="byline author vcard">Posted by <span class="fn">Erik Kristensen</span></span>
 </span>
-        <div class="meta">
-            Categories: 
+            </div>
+            <div class="date">
+                <i class="fa fa-calendar"></i>
+                <span class="data">
 
 
-	<a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/encryption/'>encryption</a>, <a class='category' href='/blog/categories/longread/'>longread</a>, <a class='category' href='/blog/categories/luks/'>luks</a>, <a class='category' href='/blog/categories/saltstack/'>saltstack</a>, <a class='category' href='/blog/categories/tutorial/'>tutorial</a>
 
 
+
+
+
+
+  
+
+
+<time datetime="2014-06-09T20:43:52-04:00" pubdate data-updated="true">Jun 9<span>th</span>, 2014</time></span>
+            </div>
         </div>
     </header>
-    <div class="clearfix">
-        &nbsp;
+    <div class="body">
+        <p><strong>Encrypted Data at Rest</strong> is the big term that has been floating around for several years. Just recently AWS started offering encrypted EBS volumes, the only problem with that is you cannot encrypt Instance Storage (aka Ephemeral Storage) volumes or Root volumes. This solution will not work for Root volumes, but it will for the Ephemeral volumes. The only potential problem with the encrypted EBS volumes is that AWS retains controls of the encryption keys for you in their IAM system. However since you&rsquo;ve chosen to use the cloud that might not be a problem. Thankfully using SaltStack and my previous trick <a href="">Just in Time Encryption Keys using SaltStack</a>, you can automatically encrypt your Instance Storage on your EC2 Instances giving you that extra layer of security. This can be extremely beneficial if you want to convey to your clients that you are doing <strong>Full Disk Encryption</strong> and you want the ability to use SSD storage instead of EBS volumes.</p>
+
+<!-- more -->
+
+
+<h2>Overview</h2>
+
+<p>Using the same principles from my previous post about using SaltStack to deliver the encryption keys you can automatically encrypt all instance storage very quickly and effectively using LUKS. You will need SaltStack installed, with the <a href="https://github.com/saltstack/salt-contrib/blob/master/grains/ec2_tags.py">EC2 Grains plugin</a> (Please note that you&rsquo;ll need the Boto python plugin installed for it to work). The EC2 Grains plugin gathers all the metadata from about your instance and updates the minion&rsquo;s grain information. Using the EC2 grains we can find all attached ephemeral (aka instance storage) disks and encrypt them at boot.</p>
+
+<p>Current this state has only been tested on Ubuntu systems, but should be easily expandable to others as well, just need to make sure the proper LVM packages are installed.</p>
+
+<p>This state also stores the encrypt volume paths in a grain, so that you can access them from other states in Salt.</p>
+
+<h2>The Breakdown</h2>
+
+<p><strong>Lines 1 and 2</strong> are basic setup for the state, if you want to set a custom password, just make sure you set a <code>instanceluks:password</code> pillar data. You can also do per volume or drive passwords, on <strong>Line 25</strong></p>
+
+<p><strong>Lines 4 through 16</strong> install the necessary crypsetup and LVM for ubuntu, with a little bit of work other operating systems can be supported.</p>
+
+<p><strong>Line 18</strong> starts the loop through the instance storage (ephemeral disk)</p>
+
+<p><strong>Line 19</strong> checks to see if the ephemeral disk exists, <strong>Note:</strong> Earlier I stated you had to install the ec2_tags.py grains module, this is why.</p>
+
+<p><strong>Line 25</strong> if you set <code>instanceluks:passwords:NAME</code> in your pillar data, the state will use it, else it will use the global password set on <strong>Line 2</strong>.</p>
+
+<p>The rest of the state are all the state commands to check if the LUKS partition has already been created, if not then create it, otherwise mount it after unlocking the volume.</p>
+
+<p>After each volume is encrypted and mounted the state stores the volume mount path back into the hosts grains so that other states can access it, see <strong>Lines 60-63</strong></p>
+
+<h2>The Full State</h2>
+
+<div><script src='https://gist.github.com/8f88244ba6f8c253cfca.js?file=instanceluks.state'></script>
+<noscript><pre><code>{%- set numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8'] -%}
+{%- set global_password = salt['pillar.get']('instanceluks:password', 'testing12345') -%}
+
+{% if grains['os_family'] == 'Debian' %}
+instanceluks_crypto_package:
+  pkg:
+    - name: cryptsetup
+    - order: 5
+    - installed
+
+instanceluks_lvm2_package:
+  pkg:
+    - name: lvm2
+    - order: 6
+    - installed
+{% endif %}
+
+{% for num in numbers %}
+  {%- set device = salt['grains.get']('ec2_block-device-mapping_ephemeral' + num, false) -%}
+  {% if device %}
+    {%- if grains['os_family'] == 'Debian' -%}
+    {%- set device = device|replace(&quot;sd&quot;, &quot;xvd&quot;) -%}
+    {%- endif -%}
+    {%- set name   = &quot;data&quot; + num -%}
+    {%- set password = salt['pillar.get']('instanceluks:passwords:' + name, global_password) -%}
+
+instanceluks_umount_{{ num }}:
+  cmd.run:
+    - name: umount /dev/{{ device }}
+    - onlyif: df | grep /dev/{{ device }}
+    - order: 10
+
+instanceluks_encrypt_{{ num }}:
+  cmd.run:
+    - unless: cryptsetup luksUUID /dev/{{ device }}
+    - name: echo &quot;{{ password }}&quot; | cryptsetup luksFormat /dev/{{ device }}
+    - order: 12
+
+instanceluks_open_{{ num }}:
+  cmd.run:
+    - unless: stat /dev/mapper/{{ name }}
+    - name: echo &quot;{{ password }}&quot; | cryptsetup luksOpen /dev/{{ device }} {{ name }}
+    - order: 14
+
+instanceluks_format_{{ num }}:
+  cmd.run:
+    - unless: lsblk -f /dev/mapper/{{ name }} | grep ext4
+    - name: mkfs.ext4 /dev/mapper/{{ name }}
+    - order: 16
+
+instanceluks_mount_{{ num }}:
+  mount.mounted:
+    - name: /{{ name }}
+    - device: /dev/mapper/{{ name }}
+    - fstype: ext4
+    - mkmnt: True
+    - persist: False
+    - order: 18
+
+instanceluks_grain_{{ num }}:
+  grains.list_present:
+    - name: instanceluks_volumes
+    - value: /{{ name }}
+
+  {% endif %}
+{% endfor %}</code></pre></noscript></div>
+
+
+<h2>Conclusion</h2>
+
+<p>If you find this useful let me know. As always comments, questions, critique, etc is always welcome. Cheers!</p>
+
     </div>
 </article>
 
-	
-	</section>
-	
 
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
 
             </div>
             <aside class="col-md-4 blog-aside">
@@ -302,7 +415,10 @@
       var disqus_shortname = 'bitjudo';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://bitjudo.com/blog/2014/06/09/encrypting-aws-instance-storage/';
+        var disqus_url = 'http://bitjudo.com/blog/2014/06/09/encrypting-aws-instance-storage/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

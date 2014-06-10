@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: aws | bitJudo]]></title>
+  <link href="http://bitjudo.com/blog/categories/aws/atom.xml" rel="self"/>
+  <link href="http://bitjudo.com/"/>
+  <updated>2014-06-09T20:42:21-04:00</updated>
+  <id>http://bitjudo.com/</id>
+  <author>
+    <name><![CDATA[a couple of geeks]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Encrypting AWS Instance Storage]]></title>
+    <link href="http://bitjudo.com/blog/2014/06/09/encrypting-aws-instance-storage/"/>
+    <updated>2014-06-09T20:43:52-04:00</updated>
+    <id>http://bitjudo.com/blog/2014/06/09/encrypting-aws-instance-storage</id>
+    <content type="html"><![CDATA[<p><strong>Encrypted Data at Rest</strong> is the big term that has been floating around for several years. Just recently AWS started offering encrypted EBS volumes, the only problem with that is you cannot encrypt Instance Storage (aka Ephemeral Storage) volumes or Root volumes. This solution will not work for Root volumes, but it will for the Ephemeral volumes. The only potential problem with the encrypted EBS volumes is that AWS retains controls of the encryption keys for you in their IAM system. However since you&rsquo;ve chosen to use the cloud that might not be a problem. Thankfully using SaltStack and my previous trick <a href="">Just in Time Encryption Keys using SaltStack</a>, you can automatically encrypt your Instance Storage on your EC2 Instances giving you that extra layer of security. This can be extremely beneficial if you want to convey to your clients that you are doing <strong>Full Disk Encryption</strong> and you want the ability to use SSD storage instead of EBS volumes.</p>
+
+<!-- more -->
+
+
+<h2>Overview</h2>
+
+<p>Using the same principles from my previous post about using SaltStack to deliver the encryption keys you can automatically encrypt all instance storage very quickly and effectively using LUKS. You will need SaltStack installed, with the <a href="https://github.com/saltstack/salt-contrib/blob/master/grains/ec2_tags.py">EC2 Grains plugin</a> (Please note that you&rsquo;ll need the Boto python plugin installed for it to work). The EC2 Grains plugin gathers all the metadata from about your instance and updates the minion&rsquo;s grain information. Using the EC2 grains we can find all attached ephemeral (aka instance storage) disks and encrypt them at boot.</p>
+
+<p>Current this state has only been tested on Ubuntu systems, but should be easily expandable to others as well, just need to make sure the proper LVM packages are installed.</p>
+
+<p>This state also stores the encrypt volume paths in a grain, so that you can access them from other states in Salt.</p>
+
+<h2>The Breakdown</h2>
+
+<p><strong>Lines 1 and 2</strong> are basic setup for the state, if you want to set a custom password, just make sure you set a <code>instanceluks:password</code> pillar data. You can also do per volume or drive passwords, on <strong>Line 25</strong></p>
+
+<p><strong>Lines 4 through 16</strong> install the necessary crypsetup and LVM for ubuntu, with a little bit of work other operating systems can be supported.</p>
+
+<p><strong>Line 18</strong> starts the loop through the instance storage (ephemeral disk)</p>
+
+<p><strong>Line 19</strong> checks to see if the ephemeral disk exists, <strong>Note:</strong> Earlier I stated you had to install the ec2_tags.py grains module, this is why.</p>
+
+<p><strong>Line 25</strong> if you set <code>instanceluks:passwords:NAME</code> in your pillar data, the state will use it, else it will use the global password set on <strong>Line 2</strong>.</p>
+
+<p>The rest of the state are all the state commands to check if the LUKS partition has already been created, if not then create it, otherwise mount it after unlocking the volume.</p>
+
+<p>After each volume is encrypted and mounted the state stores the volume mount path back into the hosts grains so that other states can access it, see <strong>Lines 60-63</strong></p>
+
+<h2>The Full State</h2>
+
+<p><div><script src='https://gist.github.com/8f88244ba6f8c253cfca.js?file=instanceluks.state'></script>
+<noscript><pre><code>{%- set numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8'] -%}
+{%- set global_password = salt['pillar.get']('instanceluks:password', 'testing12345') -%}
+
+{% if grains['os_family'] == 'Debian' %}
+instanceluks_crypto_package:
+  pkg:
+    - name: cryptsetup
+    - order: 5
+    - installed
+
+instanceluks_lvm2_package:
+  pkg:
+    - name: lvm2
+    - order: 6
+    - installed
+{% endif %}
+
+{% for num in numbers %}
+  {%- set device = salt['grains.get']('ec2_block-device-mapping_ephemeral' + num, false) -%}
+  {% if device %}
+    {%- if grains['os_family'] == 'Debian' -%}
+    {%- set device = device|replace(&quot;sd&quot;, &quot;xvd&quot;) -%}
+    {%- endif -%}
+    {%- set name   = &quot;data&quot; + num -%}
+    {%- set password = salt['pillar.get']('instanceluks:passwords:' + name, global_password) -%}
+
+instanceluks_umount_{{ num }}:
+  cmd.run:
+    - name: umount /dev/{{ device }}
+    - onlyif: df | grep /dev/{{ device }}
+    - order: 10
+
+instanceluks_encrypt_{{ num }}:
+  cmd.run:
+    - unless: cryptsetup luksUUID /dev/{{ device }}
+    - name: echo &quot;{{ password }}&quot; | cryptsetup luksFormat /dev/{{ device }}
+    - order: 12
+
+instanceluks_open_{{ num }}:
+  cmd.run:
+    - unless: stat /dev/mapper/{{ name }}
+    - name: echo &quot;{{ password }}&quot; | cryptsetup luksOpen /dev/{{ device }} {{ name }}
+    - order: 14
+
+instanceluks_format_{{ num }}:
+  cmd.run:
+    - unless: lsblk -f /dev/mapper/{{ name }} | grep ext4
+    - name: mkfs.ext4 /dev/mapper/{{ name }}
+    - order: 16
+
+instanceluks_mount_{{ num }}:
+  mount.mounted:
+    - name: /{{ name }}
+    - device: /dev/mapper/{{ name }}
+    - fstype: ext4
+    - mkmnt: True
+    - persist: False
+    - order: 18
+
+instanceluks_grain_{{ num }}:
+  grains.list_present:
+    - name: instanceluks_volumes
+    - value: /{{ name }}
+
+  {% endif %}
+{% endfor %}</code></pre></noscript></div>
+</p>
+
+<h2>Conclusion</h2>
+
+<p>If you find this useful let me know. As always comments, questions, critique, etc is always welcome. Cheers!</p>
+]]></content>
+  </entry>
+  
+</feed>
